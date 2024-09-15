@@ -1,9 +1,6 @@
 package _2._millionaire.task;
 
-import _2._millionaire.task.dto.CreateTaskRequest;
-import _2._millionaire.task.dto.SearchTaskListResponse;
-import _2._millionaire.task.dto.SearchTaskResponse;
-import _2._millionaire.task.dto.UpdateTaskRequest;
+import _2._millionaire.task.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,5 +41,16 @@ public class TaskController {
                                                                              @RequestParam(name = "year") Integer year,
                                                                              @RequestParam(name = "month") Integer month){
         return ResponseEntity.status(HttpStatus.OK).body(taskService.searchTaskByMemberAndMonth(groupId, memberId, year, month));
+    }
+
+    @PatchMapping("/status")
+    public ResponseEntity<String> updateTaskStatus(@RequestBody UpdateTaskStatusRequest updateTaskStatusRequest){
+        taskService.updateTaskStatus(updateTaskStatusRequest);
+        return ResponseEntity.status(HttpStatus.OK).body("인증 상태 변경 되었습니다.");
+    }
+
+    @GetMapping("/{groupId}")
+    public ResponseEntity<SearchPendingTaskListResponse> searchPendingTask(@PathVariable ("groupId") Long groupId){
+        return ResponseEntity.status(HttpStatus.OK).body(taskService.searchPendingTask(groupId));
     }
 }
