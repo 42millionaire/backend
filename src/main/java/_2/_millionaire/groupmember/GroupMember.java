@@ -5,14 +5,12 @@ import _2._millionaire.group.Groups;
 import _2._millionaire.member.Member;
 import _2._millionaire.task.Task;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
+@Getter
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
