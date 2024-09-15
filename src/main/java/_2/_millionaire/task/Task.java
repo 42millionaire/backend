@@ -6,13 +6,13 @@ import _2._millionaire.groupmember.GroupMember;
 import _2._millionaire.verification.Verification;
 import _2._millionaire.verification_image.VerificationImage;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
+@Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -36,4 +36,8 @@ public class Task extends BaseEntity {
 
     @OneToOne(mappedBy = "task", cascade = CascadeType.ALL)
     private Verification verification;
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }
