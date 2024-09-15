@@ -40,4 +40,8 @@ public class Task extends BaseEntity {
     public void updateContent(String content) {
         this.content = content;
     }
+
+    public void updateStatus(String status) {
+        this.status = status;
+    }
 }
