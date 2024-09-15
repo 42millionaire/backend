@@ -1,14 +1,13 @@
 package _2._millionaire.member;
 
 import _2._millionaire.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import _2._millionaire.groupjoinrequest.GroupJoinRequest;
+import _2._millionaire.groupmember.GroupMember;
+import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.sql.ast.tree.expression.Collation;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Builder
@@ -17,9 +16,15 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 public class Member extends BaseEntity {
 
+    @OneToMany(mappedBy = "member")
+    private List<GroupMember> groupMembers;
+
+    @OneToMany(mappedBy = "member")
+    private List<GroupJoinRequest> groupJoinRequests;
+
     @Column(length = 30)
-    String name;
+    private String name;
 
     @Column(length = 150)
-    String email;
+    private String email;
 }

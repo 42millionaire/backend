@@ -1,12 +1,18 @@
 package _2._millionaire.group;
 
 import _2._millionaire.BaseEntity;
+import _2._millionaire.groupjoinrequest.GroupJoinRequest;
+import _2._millionaire.groupmember.GroupMember;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @AllArgsConstructor
@@ -15,13 +21,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Group extends BaseEntity {
 
+    @OneToMany(mappedBy = "group")
+    private List<GroupMember> groupMembers;
+
+    @OneToMany(mappedBy = "groupJoinRequests")
+    private List<GroupJoinRequest> groupJoinRequests;
+
     @Column(length = 200)
-    String groupName;
+    private String groupName;
 
     //타입 임시지정함.
-    String groupImage;
+    private String groupImage;
 
     @Column(length = 500)
-    String notice;
+    private String notice;
 
 }
