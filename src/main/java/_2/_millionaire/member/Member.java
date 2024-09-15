@@ -23,8 +23,13 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<GroupJoinRequest> groupJoinRequests;
 
+    Member(String nickName, String email) {
+        this.nickName = nickName;
+        this.email = email;
+    }
+
     @Column(length = 30)
-    private String name;
+    private String nickName;
 
     @Column(length = 150)
     private String email;
