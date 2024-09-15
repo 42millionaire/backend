@@ -6,16 +6,14 @@ import _2._millionaire.groupmember.GroupMember;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @AllArgsConstructor
 @Builder
+@Getter
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 public class Groups extends BaseEntity {
@@ -26,12 +24,15 @@ public class Groups extends BaseEntity {
     @OneToMany(mappedBy = "groups")
     private List<GroupJoinRequest> groupJoinRequests;
 
+    @Setter
     @Column(length = 200)
     private String groupName;
 
     //타입 임시지정함.
     private String groupImage;
 
+    @Setter
+    @Getter
     @Column(length = 500)
     private String notice;
 
