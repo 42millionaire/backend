@@ -1,7 +1,7 @@
 package _2._millionaire.groupmember;
 
 import _2._millionaire.BaseEntity;
-import _2._millionaire.group.Group;
+import _2._millionaire.group.Groups;
 import _2._millionaire.member.Member;
 import _2._millionaire.task.Task;
 import jakarta.persistence.*;
@@ -19,16 +19,15 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 public class GroupMember extends BaseEntity {
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn()
     private Member member;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn()
-    private Group group;
+    private Groups groups;
 
     @OneToMany(mappedBy = "groupMember")
-    @JoinColumn()
     private List<Task> tasks;
 
     @Column(length = 100)

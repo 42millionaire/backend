@@ -1,9 +1,10 @@
 package _2._millionaire.groupjoinrequest;
 
 import _2._millionaire.BaseEntity;
-import _2._millionaire.group.Group;
+import _2._millionaire.group.Groups;
 import _2._millionaire.member.Member;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -18,11 +19,11 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 public class GroupJoinRequest extends BaseEntity {
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn()
-    Member member;
+    private Member member;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn()
-    Group group;
+    private Groups groups;
 }

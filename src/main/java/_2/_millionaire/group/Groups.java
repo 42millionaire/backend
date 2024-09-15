@@ -5,7 +5,6 @@ import _2._millionaire.groupjoinrequest.GroupJoinRequest;
 import _2._millionaire.groupmember.GroupMember;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,12 +18,12 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
-public class Group extends BaseEntity {
+public class Groups extends BaseEntity {
 
-    @OneToMany(mappedBy = "group")
+    @OneToMany(mappedBy = "groups")
     private List<GroupMember> groupMembers;
 
-    @OneToMany(mappedBy = "groupJoinRequests")
+    @OneToMany(mappedBy = "groups")
     private List<GroupJoinRequest> groupJoinRequests;
 
     @Column(length = 200)
