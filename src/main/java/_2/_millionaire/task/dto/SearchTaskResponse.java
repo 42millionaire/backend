@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 @Builder
 public record SearchTaskResponse(Long taskId,
                                  String content,
-                                 LocalDateTime createdAt,
-                                 LocalDateTime updatedAt,
+                                 LocalDateTime createdTime,
+                                 LocalDateTime updatedTime,
                                  String status) {
 }

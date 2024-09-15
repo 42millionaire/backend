@@ -6,10 +6,7 @@ import _2._millionaire.groupmember.GroupMember;
 import _2._millionaire.groupmember.GroupMemberRepository;
 import _2._millionaire.member.Member;
 import _2._millionaire.member.MemberRepository;
-import _2._millionaire.task.dto.CreateTaskRequest;
-import _2._millionaire.task.dto.SearchTaskListResponse;
-import _2._millionaire.task.dto.SearchTaskResponse;
-import _2._millionaire.task.dto.UpdateTaskRequest;
+import _2._millionaire.task.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,8 +66,8 @@ public class TaskServiceImpl implements TaskService {
         return SearchTaskResponse.builder()
                 .taskId(task.getId())
                 .content(task.getContent())
-                .createdAt(task.getCreatedAt())
-                .updatedAt(task.getUpdatedAt())
+                .createdTime(task.getCreatedAt())
+                .updatedTime(task.getUpdatedAt())
                 .status(task.getStatus())
                 .build();
     }
@@ -103,8 +100,8 @@ public class TaskServiceImpl implements TaskService {
                 .map(task -> SearchTaskResponse.builder()
                         .taskId(task.getId())
                         .content(task.getContent())
-                        .createdAt(task.getCreatedAt())
-                        .updatedAt(task.getUpdatedAt())
+                        .createdTime(task.getCreatedAt())
+                        .updatedTime(task.getUpdatedAt())
                         .status(task.getStatus())
                         .build())
                 .collect(Collectors.toList());
@@ -114,4 +111,39 @@ public class TaskServiceImpl implements TaskService {
                 .tasks(taskResponses)
                 .build();
     }
+
+    @Transactional
+    public void updateTaskStatus(UpdateTaskStatusRequest updateTaskStatusRequest) {
+        Task task = taskRepository.findById(updateTaskStatusRequest.taskId())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 태스크입니다."));
+        task.updateStatus(updateTaskStatusRequest.status());
+    }
+
+    public SearchPendingTaskListResponse searchPendingTask(Long groupId) {
+        // 1. 그룹 조회
+        Groups group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹을 찾을 수 없습니다."));
+
+        // 2. 그룹의 그룹 멤버들 조회
+        List<GroupMember> groupMembers = group.getGroupMembers();
+
+        // 3. 그룹 멤버들의 Task 중 status가 "pend"인 Task만 필터링하여 DTO로 변환
+        List<SearchPendingTaskListResponse.SearchPendingTaskResponse> pendingTasks = groupMembers.stream()
+                .flatMap(groupMember -> groupMember.getTasks().stream()) // 그룹 멤버별 Task 스트림 펼치기
+                .filter(task -> "pend".equals(task.getStatus()))          // 상태가 "pend"인 Task만 필터링
+                .map(task -> SearchPendingTaskListResponse.SearchPendingTaskResponse.builder()
+                        .taskId(task.getId())
+                        .content(task.getContent())
+                        .createdTime(task.getCreatedAt())
+                        .updatedTime(task.getUpdatedAt())
+                        .status(task.getStatus())
+                        .build())  // 빌더 패턴 완료
+                .collect(Collectors.toList());  // 리스트로 변환
+
+        // 4. 필터링된 Task 리스트 반환
+        return SearchPendingTaskListResponse.builder()
+                .tasks(pendingTasks)
+                .build();
+    }
+
 }

@@ -4,18 +4,19 @@ import _2._millionaire.BaseEntity;
 import _2._millionaire.task.Task;
 import _2._millionaire.verification_image.VerificationImage;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
+@Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Verification extends BaseEntity {
 
+    @Setter
     private String content;
 
     @OneToOne
