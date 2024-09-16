@@ -26,10 +26,12 @@ public class Task extends BaseEntity {
     @Column(length = 300)
     private String content;
 
+    @Setter
     @Column(length = 20)
-    private String status;
+    private String status = "none";
 
     @Column(nullable = false)
+    @Setter
     private LocalDate dueDate;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)

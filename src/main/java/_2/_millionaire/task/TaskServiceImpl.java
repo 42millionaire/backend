@@ -6,6 +6,7 @@ import _2._millionaire.group.exception.GroupCustomException;
 import _2._millionaire.group.exception.GroupErrorCode;
 import _2._millionaire.groupmember.GroupMember;
 import _2._millionaire.groupmember.GroupMemberRepository;
+import _2._millionaire.groupmember.GroupMemberServiceImpl;
 import _2._millionaire.groupmember.exception.GroupMemberCustomException;
 import _2._millionaire.groupmember.exception.GroupMemberErrorCode;
 import _2._millionaire.member.Member;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,6 +33,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final MemberRepository memberRepository;
     private final GroupRepository groupRepository;
+    private final GroupMemberRepository groupMemberRepository;
 
     @Transactional
     public void createTask(CreateTaskRequest createTaskRequest) {
@@ -158,5 +161,25 @@ public class TaskServiceImpl implements TaskService {
         return SearchPendingTaskListResponse.builder()
                 .tasks(pendingTasks)
                 .build();
+    }
+
+    @Transactional
+    public void createTaskForTomorrow(LocalDate dueDate) {
+        List<GroupMember> groupMembers = groupMemberRepository.findAll();
+        for (GroupMember groupMember : groupMembers) {
+            // 해당 그룹 멤버에게 내일 할일(Task)이 있는지 확인
+            boolean taskExists = taskRepository.existsByGroupMemberAndDueDate(groupMember, dueDate);
+
+            if (!taskExists) {
+                // Task가 없으면 새로운 Task 생성
+                Task newTask = Task.builder()
+                        .content("목표 설정 기한을 놓쳤습니다.") // 자동 생성 Task에 대한 기본 내용
+                        .dueDate(dueDate)
+                        .status("deny") // 상태를 "deny"로 설정
+                        .groupMember(groupMember) // 해당 그룹 멤버 설정
+                        .build();
+                taskRepository.save(newTask);
+            }
+        }
     }
 }
