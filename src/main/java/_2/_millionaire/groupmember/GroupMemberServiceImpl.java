@@ -2,6 +2,8 @@ package _2._millionaire.groupmember;
 
 import _2._millionaire.group.GroupRepository;
 import _2._millionaire.group.Groups;
+import _2._millionaire.group.exception.GroupCustomException;
+import _2._millionaire.group.exception.GroupErrorCode;
 import _2._millionaire.groupmember.dto.SearchGroupMemberListResponse;
 import _2._millionaire.groupmember.dto.SearchGroupMemberResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +18,12 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class GroupMemberServiceImpl implements  GroupMemberSerivce{
 
-    private final GroupMemberRepository groupMemberRepository;
     private final GroupRepository groupRepository;
 
     public SearchGroupMemberListResponse searchAllGroupMembers(Long groupId) {
         // groupId로 그룹을 찾고 없으면 예외를 던짐
-        Groups groups = groupRepository.findById(groupId).orElseThrow();
+        Groups groups = groupRepository.findById(groupId)
+                .orElseThrow(() -> new GroupCustomException(GroupErrorCode.GROUP_NOT_FOUND));
 
         // 그룹에 속한 멤버들을 가져옴
         List<GroupMember> groupMembers = groups.getGroupMembers();
