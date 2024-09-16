@@ -28,8 +28,10 @@ public class GroupMember extends BaseEntity {
     @OneToMany(mappedBy = "groupMember")
     private List<Task> tasks;
 
+    @Setter
     @Column(length = 100)
     private String role;
 
+    @Column(columnDefinition = "BIGINT default 0")
     private Long penalty;
 }
