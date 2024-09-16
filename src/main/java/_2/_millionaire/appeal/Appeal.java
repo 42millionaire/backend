@@ -21,7 +21,9 @@ public class Appeal extends BaseEntity {
     private String content;
 
     @Column(length = 10)
+    @Setter
     private String status;
+
     @ManyToOne
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     private Task task;
