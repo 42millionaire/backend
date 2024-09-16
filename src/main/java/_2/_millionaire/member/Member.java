@@ -1,12 +1,11 @@
 package _2._millionaire.member;
 
 import _2._millionaire.BaseEntity;
-import _2._millionaire.groupjoinrequest.GroupJoinRequest;
+import _2._millionaire.groupjoin.GroupJoin;
 import _2._millionaire.groupmember.GroupMember;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,7 +20,7 @@ public class Member extends BaseEntity {
     private List<GroupMember> groupMembers;
 
     @OneToMany(mappedBy = "member")
-    private List<GroupJoinRequest> groupJoinRequests;
+    private List<GroupJoin> groupJoins;
 
     Member(String nickName, String email) {
         this.nickName = nickName;
