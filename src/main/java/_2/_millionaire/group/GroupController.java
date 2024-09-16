@@ -37,9 +37,14 @@ public class GroupController {
     }
 
     @GetMapping("/notice")
-    public ResponseEntity<NoticeResponse> searchGroupNotice(@RequestParam("groupId") Long groupId) {
+    public ResponseEntity<NoticeResponse> searchGroupNotice(@PathVariable("groupId") Long groupId) {
         NoticeResponse noticeResponse = groupService.searchGroupNotice(groupId);
         return ResponseEntity.ok(noticeResponse);
+    }
+
+    @GetMapping("")
+    public ResponseEntity<GroupListResponse> searchAllGroup() {
+        return (ResponseEntity.ok(groupService.searchAllGroup()));
     }
 
 }

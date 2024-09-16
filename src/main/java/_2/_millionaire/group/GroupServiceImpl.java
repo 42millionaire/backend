@@ -5,6 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -42,5 +46,15 @@ public class GroupServiceImpl implements  GroupService{
     public NoticeResponse searchGroupNotice(Long groupId) {
         Groups group = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
         return new NoticeResponse(group.getNotice());
+    }
+
+    public GroupListResponse searchAllGroup() {
+        final List<Groups> groups = groupRepository.findAll();
+
+        List<GroupResponse> groupResponses = groups.stream().map(group -> GroupResponse.builder()
+                .groupId(group.getId())
+                .groupName(group.getGroupName()).build()).collect(Collectors.toList());
+
+        return GroupListResponse.builder().groupResponses(groupResponses).build();
     }
 }

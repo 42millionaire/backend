@@ -13,11 +13,11 @@ import java.util.List;
 @Entity
 @AllArgsConstructor
 @Builder
-@Getter
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 public class Groups extends BaseEntity {
 
+    @Getter
     @OneToMany(mappedBy = "groups")
     private List<GroupMember> groupMembers;
 
@@ -25,6 +25,7 @@ public class Groups extends BaseEntity {
     private List<GroupJoinRequest> groupJoinRequests;
 
     @Setter
+    @Getter
     @Column(length = 200)
     private String groupName;
 
