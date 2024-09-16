@@ -2,6 +2,7 @@ package _2._millionaire.task.dto;
 
 import lombok.Builder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -11,6 +12,7 @@ public record SearchPendingTaskListResponse(List<SearchPendingTaskResponse> task
     public record SearchPendingTaskResponse(Long taskId,
                                             String content,
                                             String memberName,
+                                            LocalDate dueDate,
                                             LocalDateTime createdTime,
                                             LocalDateTime updatedTime,
                                             String status){
