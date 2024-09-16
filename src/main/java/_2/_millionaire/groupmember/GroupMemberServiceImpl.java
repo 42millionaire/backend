@@ -27,6 +27,7 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
 
     private final GroupRepository groupRepository;
     private final MemberRepository memberRepository;
+    private final GroupMemberRepository groupMemberRepository;
 
     public SearchGroupMemberListResponse searchAllGroupMembers(Long groupId) {
         // groupId로 그룹을 찾고 없으면 예외를 던짐
@@ -95,5 +96,4 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
 
         targetGroupMember.setRole(rollGroupMemberRequest.role());
     }
-
 }

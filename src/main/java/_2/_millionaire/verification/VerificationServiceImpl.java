@@ -42,6 +42,7 @@ public class VerificationServiceImpl implements VerificationService{
                     .task(task)
                     .content(content)
                     .build();
+            task.setStatus("pend");
             verificationRepository.save(verification);
         } else {
             verification.setContent(content);
