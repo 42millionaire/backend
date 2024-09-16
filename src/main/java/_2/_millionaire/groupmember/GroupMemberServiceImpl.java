@@ -2,6 +2,7 @@ package _2._millionaire.groupmember;
 
 import _2._millionaire.group.GroupRepository;
 import _2._millionaire.group.Groups;
+import _2._millionaire.groupjoin.GroupJoin;
 import _2._millionaire.groupmember.dto.GroupMemberRequest;
 import _2._millionaire.groupmember.dto.RollGroupMemberRequest;
 import _2._millionaire.groupmember.dto.SearchGroupMemberListResponse;
@@ -10,6 +11,7 @@ import _2._millionaire.member.Member;
 import _2._millionaire.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.Group;
+import org.hibernate.metamodel.model.domain.internal.MapMember;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,11 +51,22 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
 
     public void joinGroupMember (GroupMemberRequest groupMemberRequest) {
         Member member = memberRepository.findById(groupMemberRequest.memberId())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("멤버가 존재하지 않습니다."));
         Groups group = groupRepository.findById(groupMemberRequest.groupId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
 
-        GroupMember groupMember = GroupMember.builder().member(member).groups(group).role("member").build();
+        List<GroupJoin> groupJoins = member.getGroupJoins();
+        // memberId와 member.getId()가 같은 GroupJoin 찾기
+        GroupJoin groupJoin = groupJoins.stream()
+                .filter(gj -> gj.getGroups().getId().equals(group.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당 그룹 가입 요청이 없습니다."));
+
+        GroupMember groupMember = GroupMember.builder()
+                .member(groupJoin.getMember())
+                .groups(groupJoin.getGroups())
+                .role("member")
+                .build();
         groupMemberRepository.save(groupMember);
     }
 
