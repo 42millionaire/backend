@@ -1,7 +1,8 @@
 package _2._millionaire.member;
 
 import _2._millionaire.member.dto.CreateMemberRequest;
-import _2._millionaire.member.dto.CreateMemberRespone;
+import _2._millionaire.member.dto.CreateMemberResponse;
+import _2._millionaire.member.dto.MemberListResponse;
 import _2._millionaire.member.dto.MemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,20 +19,17 @@ public class MemberController {
     private final MemberServiceImpl memberService;
 
     @PostMapping("")
-    public ResponseEntity<CreateMemberRespone> createMember(@RequestBody CreateMemberRequest createMemberRequest) {
-        memberService.join(createMemberRequest);
-        return ResponseEntity.ok(new CreateMemberRespone());
+    public ResponseEntity<CreateMemberResponse> createMember(@RequestBody CreateMemberRequest createMemberRequest) {
+        return ResponseEntity.ok(memberService.join(createMemberRequest));
     }
 
     @GetMapping("")
-    public ResponseEntity<List<MemberResponse>> getAllMembers() {
-        final List<MemberResponse> memberResponseList = memberService.findAll();
-
-        return ResponseEntity.ok(memberResponseList);
+    public ResponseEntity<MemberListResponse> searchAllMembers() {
+        return ResponseEntity.ok(memberService.searchAllMember());
     }
 
     @DeleteMapping("")
-    public ResponseEntity<String> deleteTask(@RequestParam(name = "memberId") Long memberId){
+    public ResponseEntity<String> deleteTask(@PathVariable(name = "memberId") Long memberId){
         memberService.deleteMember(memberId);
         return ResponseEntity.status(HttpStatus.OK).body("멤버 삭제되었습니다.");
     }
