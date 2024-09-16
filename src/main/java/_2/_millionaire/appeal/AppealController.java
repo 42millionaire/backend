@@ -1,5 +1,6 @@
 package _2._millionaire.appeal;
 
+import _2._millionaire.appeal.dto.ChangeAppealStatus;
 import _2._millionaire.appeal.dto.CreateAppealRequest;
 import _2._millionaire.appeal.dto.SearchAppealListResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,5 +22,11 @@ public class AppealController {
     @GetMapping("/{group_id}")
     public ResponseEntity<SearchAppealListResponse> searchAppeal(@PathVariable(value = "group_id") Long groupId){
         return ResponseEntity.status(HttpStatus.OK).body(appealService.searchAllAppeals(groupId));
+    }
+
+    @PatchMapping("")
+    public ResponseEntity<String> changeAppealStatus(@RequestBody ChangeAppealStatus changeAppealStatus){
+        appealService.changeAppealStatus(changeAppealStatus);
+        return ResponseEntity.status(HttpStatus.OK).body("상태 변경되었습니다.");
     }
 }
