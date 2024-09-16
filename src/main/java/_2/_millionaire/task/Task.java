@@ -8,6 +8,8 @@ import _2._millionaire.verification_image.VerificationImage;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -27,6 +29,9 @@ public class Task extends BaseEntity {
     @Column(length = 20)
     private String status;
 
+    @Column(nullable = false)
+    private LocalDate dueDate;
+
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     private List<Appeal> appeals;
 
@@ -39,5 +44,9 @@ public class Task extends BaseEntity {
 
     public void updateContent(String content) {
         this.content = content;
+    }
+
+    public void updateStatus(String status) {
+        this.status = status;
     }
 }
