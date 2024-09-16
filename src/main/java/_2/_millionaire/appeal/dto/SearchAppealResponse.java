@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 @Builder
 public record SearchAppealResponse(Long taskId,
+                                   Long appealId,
                                    Long memberId,
                                    String memberName,
                                    String content,
