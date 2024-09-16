@@ -1,9 +1,7 @@
 package _2._millionaire.member;
 
-import _2._millionaire.group.Groups;
-import _2._millionaire.groupmember.GroupMember;
-import _2._millionaire.groupmember.dto.SearchGroupMemberListResponse;
-import _2._millionaire.groupmember.dto.SearchGroupMemberResponse;
+import _2._millionaire.member.exception.MemberCustomException;
+import _2._millionaire.member.exception.MemberErrorCode;
 import _2._millionaire.member.dto.CreateMemberRequest;
 import _2._millionaire.member.dto.CreateMemberResponse;
 import _2._millionaire.member.dto.MemberListResponse;
@@ -45,8 +43,7 @@ public class MemberServiceImpl implements MemberService{
     @Transactional
     public void deleteMember(final Long memberId) {
         final Member member = memberRepository.findById(memberId)
-                .orElseThrow();
-
+                .orElseThrow(() -> new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND));
         memberRepository.delete(member);
     }
 }

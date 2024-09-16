@@ -11,9 +11,10 @@ import lombok.*;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
 @Builder
+@Getter
 @EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
 @NoArgsConstructor
 public class Groups extends BaseEntity {
 

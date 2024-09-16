@@ -5,6 +5,8 @@ import _2._millionaire.group.Groups;
 import _2._millionaire.groupjoin.GroupJoin;
 import _2._millionaire.groupmember.dto.GroupMemberRequest;
 import _2._millionaire.groupmember.dto.RollGroupMemberRequest;
+import _2._millionaire.group.exception.GroupCustomException;
+import _2._millionaire.group.exception.GroupErrorCode;
 import _2._millionaire.groupmember.dto.SearchGroupMemberListResponse;
 import _2._millionaire.groupmember.dto.SearchGroupMemberResponse;
 import _2._millionaire.member.Member;
@@ -23,13 +25,14 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class GroupMemberServiceImpl implements  GroupMemberSerivce{
 
-    private final GroupMemberRepository groupMemberRepository;
     private final GroupRepository groupRepository;
     private final MemberRepository memberRepository;
 
     public SearchGroupMemberListResponse searchAllGroupMembers(Long groupId) {
         // groupId로 그룹을 찾고 없으면 예외를 던짐
-        Groups groups = groupRepository.findById(groupId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));;
+
+        Groups groups = groupRepository.findById(groupId)
+                .orElseThrow(() -> new GroupCustomException(GroupErrorCode.GROUP_NOT_FOUND));
 
         // 그룹에 속한 멤버들을 가져옴
         List<GroupMember> groupMembers = groups.getGroupMembers();
