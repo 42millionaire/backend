@@ -1,7 +1,7 @@
 package _2._millionaire.group;
 
 import _2._millionaire.BaseEntity;
-import _2._millionaire.groupjoinrequest.GroupJoinRequest;
+import _2._millionaire.groupjoin.GroupJoin;
 import _2._millionaire.groupmember.GroupMember;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,7 +22,7 @@ public class Groups extends BaseEntity {
     private List<GroupMember> groupMembers;
 
     @OneToMany(mappedBy = "groups")
-    private List<GroupJoinRequest> groupJoinRequests;
+    private List<GroupJoin> groupJoins;
 
     @Setter
     @Getter
