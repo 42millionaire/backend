@@ -52,7 +52,7 @@ public class AppealServiceImpl implements AppealService{
                                 .taskId(task.getId())
                                 .appealId(appeal.getId())
                                 .memberId(task.getGroupMember().getMember().getId())
-                                .memberName(task.getGroupMember().getMember().getNickName())
+                                .memberName(task.getGroupMember().getMember().getName())
                                 .content(appeal.getContent()) // Appeal의 content 설정
                                 .createTime(appeal.getCreatedAt())
                                 .build()))

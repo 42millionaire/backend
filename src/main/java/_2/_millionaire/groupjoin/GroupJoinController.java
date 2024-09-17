@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/groupjoinrequest")
+@RequestMapping("/groupjoin")
 @RequiredArgsConstructor
 public class GroupJoinController {
     private final GroupJoinServiceImpl groupJoinService;
