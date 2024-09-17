@@ -5,10 +5,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
-import java.util.Arrays;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
+import java.util.LinkedHashMap;
 
 @Service
 @RequiredArgsConstructor
@@ -22,54 +25,36 @@ public class TaskScheduler {
         LocalDate date = LocalDate.now();
 
         // 1. 한국 공휴일 API를 호출하여 공휴일 리스트를 가져옴
-        String apiUrl = "https://holidayapi.com/v1/holidays?country=KR&year=" + date.getYear() + "&key=YOUR_API_KEY";
+        String serviceKey = "EAMJ%2FgCv4wL7M2aNd6JDH%2BG9EHyV8URFsc3AJ53kfcC1%2FvsS%2Bxlwn%2BaaMjioeH6mopuAe4vroiZxxXsAB3Islw%3D%3D";  // 발급받은 서비스 키를 여기에 입력
+        String url = "http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService/getRestDeInfo" +
+                "?solYear=" + date.getYear() +
+                "&solMonth=" + String.format("%02d", date.getMonthValue()) +
+                "&ServiceKey=" + serviceKey +
+                "&_type=json";
 
-        // 공휴일 리스트를 호출하여 List<LocalDate>로 변환
-        List<LocalDate> holidayList = getHolidayListFromApi(apiUrl);
+        ResponseEntity<Map> response = restTemplate.getForEntity(url, Map.class);
 
-        // 2. 오늘 날짜가 공휴일 리스트에 있는지 확인
-        if (holidayList.contains(date)) {
-            return; // 오늘이 공휴일이면 바로 리턴
+        // 응답에서 body를 안전하게 추출하기
+        Map<String, Object> responseBody = (Map<String, Object>) response.getBody();
+        LinkedHashMap<String, Object> responseMap = (LinkedHashMap<String, Object>) responseBody.get("response");
+        LinkedHashMap<String, Object> bodyMap = (LinkedHashMap<String, Object>) responseMap.get("body");
+        LinkedHashMap<String, Object> itemsMap = (LinkedHashMap<String, Object>) bodyMap.get("items");
+
+        // 공휴일 리스트를 가져옴
+        List<Map<String, Object>> items = (List<Map<String, Object>>) itemsMap.get("item");
+
+        // 오늘 날짜가 공휴일인지를 확인
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String today = date.format(formatter);
+
+        for (Map<String, Object> item : items) {
+            String holidayDate = item.get("locdate").toString();
+            if (today.equals(holidayDate)) {
+                return;  // 오늘이 공휴일이면 작업을 중단하고 리턴
+            }
         }
 
-        // 3. 오늘이 공휴일이 아니라면 내일의 Task를 생성
+        // 오늘이 공휴일이 아니라면 오늘의 테스트 생성
         taskService.createTaskForTomorrow(date);
-    }
-
-    // 공휴일 API를 호출하고 LocalDate 리스트로 반환하는 메서드
-    private List<LocalDate> getHolidayListFromApi(String apiUrl) {
-        // Holiday API로부터 공휴일 데이터를 받아옴
-        HolidayApiResponse response = restTemplate.getForObject(apiUrl, HolidayApiResponse.class);
-
-        // 응답에서 공휴일 날짜를 LocalDate 리스트로 변환
-        return Arrays.stream(response.getHolidays())
-                .map(holiday -> LocalDate.parse(holiday.getDate()))
-                .toList();
-    }
-
-    // Holiday API 응답을 매핑할 클래스
-    public static class HolidayApiResponse {
-        private Holiday[] holidays;
-
-        public Holiday[] getHolidays() {
-            return holidays;
-        }
-
-        public void setHolidays(Holiday[] holidays) {
-            this.holidays = holidays;
-        }
-    }
-
-    // 공휴일 객체를 매핑할 클래스
-    public static class Holiday {
-        private String date; // 날짜를 String으로 받음 (ISO 8601 형식)
-
-        public String getDate() {
-            return date;
-        }
-
-        public void setDate(String date) {
-            this.date = date;
-        }
     }
 }
