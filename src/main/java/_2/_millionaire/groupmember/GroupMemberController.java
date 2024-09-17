@@ -32,7 +32,7 @@ public class GroupMemberController {
     }
 
     @PatchMapping("")
-    public ResponseEntity<String> deleteGroupMember(@RequestBody RollGroupMemberRequest rollGroupMemberRequest) {
+    public ResponseEntity<String> changeRoleGroupMember(@RequestBody RollGroupMemberRequest rollGroupMemberRequest) {
         groupMemberService.changeRoleGroupMember(rollGroupMemberRequest);
         return ResponseEntity.status(HttpStatus.OK).body("그룹멤버의 role이 변경되었습니다.");
     }
