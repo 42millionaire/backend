@@ -28,7 +28,7 @@ public class Task extends BaseEntity {
 
     @Setter
     @Column(length = 20)
-    private String status = "none";
+    private String status;
 
     @Column(nullable = false)
     @Setter
@@ -43,6 +43,13 @@ public class Task extends BaseEntity {
 
     @OneToOne(mappedBy = "task", cascade = CascadeType.ALL)
     private Verification verification;
+
+    @PrePersist
+    public void setDefaultStatus() {
+        if (this.status == null) {
+            this.status = "none";
+        }
+    }
 
     public void updateContent(String content) {
         this.content = content;
