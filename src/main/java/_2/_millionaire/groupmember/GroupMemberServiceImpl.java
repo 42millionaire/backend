@@ -42,7 +42,7 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
         List<SearchGroupMemberResponse> searchGroupMemberResponses = groupMembers.stream()
                 .map(groupMember -> SearchGroupMemberResponse.builder()
                         .memberId(groupMember.getMember().getId())
-                        .memberName(groupMember.getMember().getNickName())
+                        .name(groupMember.getMember().getName())
                         .grade(groupMember.getRole())
                         .build())  // 빌더 패턴을 이용해 객체를 생성
                 .collect(Collectors.toList());  // 변환된 스트림을 리스트로 수집

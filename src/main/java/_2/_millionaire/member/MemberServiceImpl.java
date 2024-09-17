@@ -19,8 +19,9 @@ import java.util.stream.Collectors;
 public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
 
+    @Transactional
     public CreateMemberResponse join(CreateMemberRequest createMemberRequest) {
-        Member member = new Member(createMemberRequest.nickName(), createMemberRequest.email());
+        Member member = new Member(createMemberRequest.name(), createMemberRequest.email());
         memberRepository.save(member);
         return new CreateMemberResponse(member.getId());
     }
@@ -31,7 +32,7 @@ public class MemberServiceImpl implements MemberService{
         List<MemberResponse> memberResponses = members.stream()
                 .map(member -> MemberResponse.builder()
                                 .memberId(member.getId())
-                                .memberName((member.getNickName()))
+                                .name(member.getName())
                                 .build())
                 .collect(Collectors.toList());
 

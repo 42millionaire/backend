@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/groupjoinrequest")
+@RequestMapping("/groupjoin")
 @RequiredArgsConstructor
 public class GroupJoinController {
     private final GroupJoinServiceImpl groupJoinService;
@@ -20,7 +20,7 @@ public class GroupJoinController {
         return ResponseEntity.status(HttpStatus.CREATED).body("그룹가입 신청이 완료되었습니다.");
     }
 
-    @GetMapping("")
+    @GetMapping("/{groupId}")
     public ResponseEntity<GroupJoinListResponse> searchAllGroupJoin(@PathVariable(name = "groupId") Long groupId) {
         return (ResponseEntity.ok(groupJoinService.searchAllGroupJoin(groupId)));
     }

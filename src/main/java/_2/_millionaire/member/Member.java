@@ -22,13 +22,13 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<GroupJoin> groupJoins;
 
-    Member(String nickName, String email) {
-        this.nickName = nickName;
+    Member(String name, String email) {
+        this.name = name;
         this.email = email;
     }
 
     @Column(length = 30)
-    private String nickName;
+    private String name;
 
     @Column(length = 150)
     private String email;

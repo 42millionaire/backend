@@ -4,6 +4,6 @@ import lombok.Builder;
 
 @Builder
 public record SearchGroupMemberResponse(Long memberId,
-                                        String memberName,
+                                        String name,
                                         String grade) {
 }
