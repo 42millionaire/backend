@@ -28,7 +28,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.searchAllMember());
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/{memberId}")
     public ResponseEntity<String> deleteTask(@PathVariable(name = "memberId") Long memberId){
         memberService.deleteMember(memberId);
         return ResponseEntity.status(HttpStatus.OK).body("멤버 삭제되었습니다.");
