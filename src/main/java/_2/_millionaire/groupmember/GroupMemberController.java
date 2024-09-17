@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class GroupMemberController {
     private final GroupMemberServiceImpl groupMemberService;
 
-    @GetMapping("")
+    @GetMapping("/{groupId}")
     public ResponseEntity<SearchGroupMemberListResponse> searchAllGroupMembers(@PathVariable("groupId") Long groupId) {
         return ResponseEntity.ok(groupMemberService.searchAllGroupMembers(groupId));
     }
@@ -32,7 +32,7 @@ public class GroupMemberController {
     }
 
     @PatchMapping("")
-    public ResponseEntity<String> deleteGroupMember(@RequestBody RollGroupMemberRequest rollGroupMemberRequest) {
+    public ResponseEntity<String> changeRoleGroupMember(@RequestBody RollGroupMemberRequest rollGroupMemberRequest) {
         groupMemberService.changeRoleGroupMember(rollGroupMemberRequest);
         return ResponseEntity.status(HttpStatus.OK).body("그룹멤버의 role이 변경되었습니다.");
     }

@@ -4,5 +4,5 @@ import lombok.Builder;
 
 @Builder
 public record MemberResponse (Long memberId,
-                              String memberName) {
+                              String name) {
 }

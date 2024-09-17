@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class GroupServiceImpl implements  GroupService{
     private final GroupRepository groupRepository;
 
+    @Transactional
     public void createGroup(CreateGroupRequest createGroupRequest) {
         Groups group = Groups.builder()
                 .groupName(createGroupRequest.groupName())
@@ -24,23 +25,24 @@ public class GroupServiceImpl implements  GroupService{
         groupRepository.save(group);
     }
 
+    @Transactional
     public void updateGroup(ModifyGroupRequest modifyGroupRequest) {
         Groups group = groupRepository.findById(modifyGroupRequest.groupId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
 
         group.setGroupName(modifyGroupRequest.groupName());
-        groupRepository.save(group);
     }
 
+    @Transactional
     public void deleteGroup(DeleteGroupRequest deleteGroupRequest) {
         Groups group = groupRepository.findById(deleteGroupRequest.groupId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
         groupRepository.delete(group);
     }
 
+    @Transactional
     public void registerNotice(RegisterNoticeRequest registerNoticeRequest) {
         Groups group = groupRepository.findById(registerNoticeRequest.groupId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
         group.setNotice(registerNoticeRequest.notice());
-        groupRepository.save(group);
     }
 
     public NoticeResponse searchGroupNotice(Long groupId) {

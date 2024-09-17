@@ -2,19 +2,14 @@ package _2._millionaire.groupjoin;
 
 import _2._millionaire.group.GroupRepository;
 import _2._millionaire.group.Groups;
-import _2._millionaire.group.dto.GroupListResponse;
-import _2._millionaire.group.dto.GroupResponse;
 import _2._millionaire.groupjoin.dto.GroupJoinListResponse;
 import _2._millionaire.groupjoin.dto.GroupJoinRequest;
 import _2._millionaire.groupjoin.dto.GroupJoinResponse;
 import _2._millionaire.member.Member;
 import _2._millionaire.member.MemberRepository;
-import _2._millionaire.member.dto.MemberListResponse;
-import _2._millionaire.member.dto.MemberResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +22,7 @@ public class GroupJoinServiceImpl implements GroupJoinService {
     private final MemberRepository memberRepository;
     private final GroupRepository groupRepository;
 
+    @Transactional
     public void joinGroup(GroupJoinRequest groupJoinRequest) {
         Member member = memberRepository.findById(groupJoinRequest.memberId())
                 .orElseThrow(() -> new IllegalArgumentException("멤버를 찾을 수 없습니다."));
@@ -45,7 +41,7 @@ public class GroupJoinServiceImpl implements GroupJoinService {
                 .filter(groupJoin -> groupJoin.getGroups().getId().equals(groupId))  // groupId와 일치하는지 필터링
                 .map(groupJoin -> GroupJoinResponse.builder()
                         .memberId(groupJoin.getMember().getId())
-                        .memberName(groupJoin.getMember().getNickName())
+                        .name(groupJoin.getMember().getName())
                         .createdTime(groupJoin.getCreatedAt()).build())
                 .collect(Collectors.toList());
 
