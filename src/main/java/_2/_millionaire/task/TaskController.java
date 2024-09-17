@@ -49,7 +49,7 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.OK).body("인증 상태 변경 되었습니다.");
     }
 
-    @GetMapping("/{groupId}")
+    @GetMapping("/pend/{groupId}")
     public ResponseEntity<SearchPendingTaskListResponse> searchPendingTask(@PathVariable ("groupId") Long groupId){
         return ResponseEntity.status(HttpStatus.OK).body(taskService.searchPendingTask(groupId));
     }

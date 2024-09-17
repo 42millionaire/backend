@@ -22,6 +22,7 @@ public class VerificationController {
         return ResponseEntity.status(HttpStatus.CREATED).body("인증 제출 되었습니다.");
 
     }
+
     @GetMapping("/{taskId}")
     public ResponseEntity<SearchVerificationResponse> searchVerification(@PathVariable("taskId") Long taskId){
         return ResponseEntity.status(HttpStatus.OK).body(verificationService.searchVerification(taskId));
