@@ -1,5 +1,6 @@
 package _2._millionaire.taskScheduler;
 
+import _2._millionaire.task.Task;
 import _2._millionaire.task.TaskServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -56,5 +57,11 @@ public class TaskScheduler {
 
         // 오늘이 공휴일이 아니라면 오늘의 테스트 생성
         taskService.createTaskForTomorrow(date);
+    }
+
+    @Scheduled(cron = "59 59 23 ? * MON-FRI")
+    public void updateTaskStatusToDeny(){
+        LocalDate today = LocalDate.now();
+        taskService.updateTaskStatus(today);
     }
 }
