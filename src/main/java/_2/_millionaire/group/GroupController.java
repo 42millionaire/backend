@@ -36,7 +36,7 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.CREATED).body("공지가 등록 되었습니다.");
     }
 
-    @GetMapping("/notice")
+    @GetMapping("/notice/{groupId}")
     public ResponseEntity<NoticeResponse> searchGroupNotice(@PathVariable("groupId") Long groupId) {
         NoticeResponse noticeResponse = groupService.searchGroupNotice(groupId);
         return ResponseEntity.ok(noticeResponse);
