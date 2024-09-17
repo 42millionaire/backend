@@ -182,4 +182,12 @@ public class TaskServiceImpl implements TaskService {
             }
         }
     }
+
+    @Transactional
+    public void updateTaskStatus(LocalDate date){
+        List<Task> tasks = taskRepository.findByDueDateAndStatus(date, "none");
+        for (Task task : tasks) {
+            task.updateStatus("deny");
+        }
+    }
 }
