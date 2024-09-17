@@ -1,8 +1,7 @@
 package _2._millionaire.member.dto;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 
-@AllArgsConstructor
-public class CreateMemberResponse {
-    private Long memberId;
+@Builder
+public record CreateMemberResponse (Long memberId) {
 }

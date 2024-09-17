@@ -20,7 +20,7 @@ public class MemberServiceImpl implements MemberService{
     private final MemberRepository memberRepository;
 
     public CreateMemberResponse join(CreateMemberRequest createMemberRequest) {
-        Member member = new Member(createMemberRequest.getNickName(), createMemberRequest.getEmail());
+        Member member = new Member(createMemberRequest.nickName(), createMemberRequest.email());
         memberRepository.save(member);
         return new CreateMemberResponse(member.getId());
     }
