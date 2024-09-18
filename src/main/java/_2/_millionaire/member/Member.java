@@ -22,7 +22,7 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<GroupJoin> groupJoins;
 
-    Member(String name, String email) {
+    public Member(String name, String email) {
         this.name = name;
         this.email = email;
     }
