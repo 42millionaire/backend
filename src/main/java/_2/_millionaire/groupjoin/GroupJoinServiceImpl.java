@@ -7,6 +7,7 @@ import _2._millionaire.groupjoin.dto.GroupJoinRequest;
 import _2._millionaire.groupjoin.dto.GroupJoinResponse;
 import _2._millionaire.member.Member;
 import _2._millionaire.member.MemberRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,19 @@ public class GroupJoinServiceImpl implements GroupJoinService {
         groupJoinRepository.save(groupJoin);
     }
 
-    public GroupJoinListResponse searchAllGroupJoin (Long groupId) {
+    public GroupJoinListResponse searchAllGroupJoin (Long groupId, HttpSession session) {
+        Groups group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
+
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        boolean isAdmin = group.getGroupMembers().stream()
+                .anyMatch(groupMember -> groupMember.getRole().equals("admin") && groupMember.getMember().equals(loginMember));
+
+        if (!isAdmin) {
+            throw new IllegalStateException("권한이 없습니다. 관리자만 그룹에 멤버를 추가할 수 있습니다.");
+        }
+
         final List<GroupJoin> groupJoins = groupJoinRepository.findAll();
 
         // groupId가 같은 GroupJoin 객체만 필터링
@@ -44,7 +57,6 @@ public class GroupJoinServiceImpl implements GroupJoinService {
                         .name(groupJoin.getMember().getName())
                         .createdTime(groupJoin.getCreatedAt()).build())
                 .collect(Collectors.toList());
-
 
         return GroupJoinListResponse.builder()
                 .groupJoinResponses(newGroupJoinResponses)
