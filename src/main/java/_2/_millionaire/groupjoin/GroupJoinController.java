@@ -3,6 +3,7 @@ package _2._millionaire.groupjoin;
 import _2._millionaire.group.dto.GroupListResponse;
 import _2._millionaire.groupjoin.dto.GroupJoinListResponse;
 import _2._millionaire.groupjoin.dto.GroupJoinRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,8 @@ public class GroupJoinController {
     }
 
     @GetMapping("/{groupId}")
-    public ResponseEntity<GroupJoinListResponse> searchAllGroupJoin(@PathVariable(name = "groupId") Long groupId) {
-        return (ResponseEntity.ok(groupJoinService.searchAllGroupJoin(groupId)));
+    public ResponseEntity<GroupJoinListResponse> searchAllGroupJoin(@PathVariable(name = "groupId") Long groupId,
+                                                                    HttpSession session) {
+        return (ResponseEntity.ok(groupJoinService.searchAllGroupJoin(groupId,session)));
     }
 }
