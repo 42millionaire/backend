@@ -1,6 +1,7 @@
 package _2._millionaire.group;
 
 import _2._millionaire.group.dto.*;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +20,16 @@ public class GroupController {
     }
 
     @PatchMapping("")
-    public ResponseEntity<String> updateGroup(@RequestBody ModifyGroupRequest modifyGroupRequest) {
-        groupService.updateGroup(modifyGroupRequest);
+    public ResponseEntity<String> updateGroup(@RequestBody ModifyGroupRequest modifyGroupRequest,
+                                              HttpSession session) {
+        groupService.updateGroup(modifyGroupRequest, session);
         return ResponseEntity.status(HttpStatus.OK).body("그룹이 수정 되었습니다.");
     }
 
     @DeleteMapping("")
-    public ResponseEntity<String> deleteGroup(@RequestBody DeleteGroupRequest deleteGroupRequest) {
-        groupService.deleteGroup(deleteGroupRequest);
+    public ResponseEntity<String> deleteGroup(@RequestBody DeleteGroupRequest deleteGroupRequest,
+                                              HttpSession session) {
+        groupService.deleteGroup(deleteGroupRequest, session);
         return ResponseEntity.status(HttpStatus.OK).body("그룹이 삭제 되었습니다.");
     }
 
