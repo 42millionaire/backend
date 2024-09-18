@@ -12,6 +12,7 @@ import _2._millionaire.groupmember.dto.SearchGroupMemberListResponse;
 import _2._millionaire.groupmember.dto.SearchGroupMemberResponse;
 import _2._millionaire.member.Member;
 import _2._millionaire.member.MemberRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.Group;
 import org.hibernate.metamodel.model.domain.internal.MapMember;
@@ -57,11 +58,20 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
     }
 
     @Transactional
-    public void joinGroupMember (GroupMemberRequest groupMemberRequest) {
+    public void joinGroupMember (GroupMemberRequest groupMemberRequest, HttpSession session) {
+        Member loginMember = (Member) session.getAttribute("user");
+
         Member member = memberRepository.findById(groupMemberRequest.memberId())
                 .orElseThrow(() -> new IllegalArgumentException("멤버가 존재하지 않습니다."));
         Groups group = groupRepository.findById(groupMemberRequest.groupId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
+
+        boolean isAdmin = group.getGroupMembers().stream()
+                .anyMatch(groupMember -> groupMember.getRole().equals("admin") && groupMember.getMember().equals(loginMember));
+
+        if (!isAdmin) {
+            throw new IllegalStateException("권한이 없습니다. 관리자만 그룹에 멤버를 추가할 수 있습니다.");
+        }
 
         List<GroupJoin> groupJoins = member.getGroupJoins();
         // memberId와 member.getId()가 같은 GroupJoin 찾기
@@ -80,11 +90,20 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
     }
 
     @Transactional
-    public void deleteGroupMember (GroupMemberRequest groupMemberRequest) {
+    public void deleteGroupMember (GroupMemberRequest groupMemberRequest, HttpSession session) {
+        Member loginUser = (Member) session.getAttribute("user");
+
         Member member = memberRepository.findById(groupMemberRequest.memberId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 멤버입니다."));
         Groups group = groupRepository.findById(groupMemberRequest.groupId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
+
+        boolean isAdmin = group.getGroupMembers().stream()
+                .anyMatch(groupMember -> groupMember.getRole().equals("admin") && groupMember.getMember().equals(loginMember));
+
+        if (!isAdmin) {
+            throw new IllegalStateException("권한이 없습니다. 관리자만 그룹에 멤버를 추가할 수 있습니다.");
+        }
 
         List<GroupMember> groupMembers = member.getGroupMembers();
 
@@ -97,10 +116,17 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
     }
 
     @Transactional
-    public void changeRoleGroupMember (RollGroupMemberRequest rollGroupMemberRequest) {
+    public void changeRoleGroupMember (RollGroupMemberRequest rollGroupMemberRequest, HttpSession session) {
+        Member loginMember = (Member) session.getAttribute("user");
         Groups group = groupRepository.findById(rollGroupMemberRequest.groupId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
         List<GroupMember> groupMembers = group.getGroupMembers();
+
+        boolean isAdmin = group.getGroupMembers().stream()
+                .anyMatch(groupMember -> groupMember.getRole().equals("admin") && groupMember.getMember().equals(loginMember));
+        if (!isAdmin) {
+            throw new IllegalStateException("권한이 없습니다. 관리자만 그룹에 멤버를 추가할 수 있습니다.");
+        }
 
         GroupMember targetGroupMember = groupMembers.stream()
                 .filter(groupMember -> groupMember.getMember().getId().equals(rollGroupMemberRequest.memberId()))
