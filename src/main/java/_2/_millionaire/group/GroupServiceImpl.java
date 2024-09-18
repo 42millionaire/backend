@@ -1,7 +1,10 @@
 package _2._millionaire.group;
 
 import _2._millionaire.group.dto.*;
+import _2._millionaire.member.Member;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,16 +29,35 @@ public class GroupServiceImpl implements  GroupService{
     }
 
     @Transactional
-    public void updateGroup(ModifyGroupRequest modifyGroupRequest) {
+    public void updateGroup(ModifyGroupRequest modifyGroupRequest, HttpSession session) {
         Groups group = groupRepository.findById(modifyGroupRequest.groupId())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
+
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        boolean isAdmin = group.getGroupMembers().stream()
+                .anyMatch(groupMember -> groupMember.getRole().equals("admin") && groupMember.getMember().equals(loginMember));
+
+        if (!isAdmin) {
+            throw new IllegalStateException("권한이 없습니다. 관리자만 그룹에 멤버를 추가할 수 있습니다.");
+        }
 
         group.setGroupName(modifyGroupRequest.groupName());
     }
 
     @Transactional
-    public void deleteGroup(DeleteGroupRequest deleteGroupRequest) {
+    public void deleteGroup(DeleteGroupRequest deleteGroupRequest, HttpSession session) {
         Groups group = groupRepository.findById(deleteGroupRequest.groupId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
+
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        boolean isAdmin = group.getGroupMembers().stream()
+                .anyMatch(groupMember -> groupMember.getRole().equals("admin") && groupMember.getMember().equals(loginMember));
+
+        if (!isAdmin) {
+            throw new IllegalStateException("권한이 없습니다. 관리자만 그룹에 멤버를 추가할 수 있습니다.");
+        }
+
         groupRepository.delete(group);
     }
 
