@@ -34,8 +34,8 @@ public class GroupController {
     }
 
     @PostMapping("/notice")
-    public ResponseEntity<String> registerNotice(@RequestBody RegisterNoticeRequest registerNoticeRequest) {
-        groupService.registerNotice(registerNoticeRequest);
+    public ResponseEntity<String> registerNotice(@RequestBody RegisterNoticeRequest registerNoticeRequest, HttpSession session) {
+        groupService.registerNotice(registerNoticeRequest, session);
         return ResponseEntity.status(HttpStatus.CREATED).body("공지가 등록 되었습니다.");
     }
 

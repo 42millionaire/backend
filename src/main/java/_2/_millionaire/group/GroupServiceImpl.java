@@ -47,7 +47,8 @@ public class GroupServiceImpl implements  GroupService{
 
     @Transactional
     public void deleteGroup(DeleteGroupRequest deleteGroupRequest, HttpSession session) {
-        Groups group = groupRepository.findById(deleteGroupRequest.groupId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
+        Groups group = groupRepository.findById(deleteGroupRequest.groupId()).
+                orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
 
         Member loginMember = (Member) session.getAttribute("loginMember");
 
@@ -62,8 +63,19 @@ public class GroupServiceImpl implements  GroupService{
     }
 
     @Transactional
-    public void registerNotice(RegisterNoticeRequest registerNoticeRequest) {
-        Groups group = groupRepository.findById(registerNoticeRequest.groupId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
+    public void registerNotice(RegisterNoticeRequest registerNoticeRequest, HttpSession session) {
+        Groups group = groupRepository.findById(registerNoticeRequest.groupId()).
+                orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
+
+        Member loginMember = (Member) session.getAttribute("loginMember");
+
+        boolean isAdmin = group.getGroupMembers().stream()
+                .anyMatch(groupMember -> groupMember.getRole().equals("admin") && groupMember.getMember().equals(loginMember));
+
+        if (!isAdmin) {
+            throw new IllegalStateException("권한이 없습니다. 관리자만 그룹에 멤버를 추가할 수 있습니다.");
+        }
+
         group.setNotice(registerNoticeRequest.notice());
     }
 
