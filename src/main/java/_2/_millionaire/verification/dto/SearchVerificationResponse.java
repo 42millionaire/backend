@@ -9,7 +9,7 @@ import java.util.List;
 public record SearchVerificationResponse(Long verificationId,
                                          String content,
                                          List<String> base64Images,
-                                         LocalDateTime created_time,
-                                         LocalDateTime updated_time
+                                         LocalDateTime createdTime,
+                                         LocalDateTime updatedTime
                                          ) {
 }

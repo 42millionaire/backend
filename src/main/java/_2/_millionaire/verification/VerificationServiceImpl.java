@@ -78,8 +78,8 @@ public class VerificationServiceImpl implements VerificationService{
         return SearchVerificationResponse.builder()
                 .content(verification.getContent())
                 .base64Images(base64Images)
-                .created_time(verification.getCreatedAt())
-                .updated_time(verification.getUpdatedAt())
+                .createdTime(verification.getCreatedAt())
+                .updatedTime(verification.getUpdatedAt())
                 .build();
     }
 }

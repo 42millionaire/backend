@@ -150,6 +150,7 @@ public class TaskServiceImpl implements TaskService {
                 .map(task -> SearchPendingTaskListResponse.SearchPendingTaskResponse.builder()
                         .taskId(task.getId())
                         .content(task.getContent())
+                        .memberName(task.getGroupMember().getMember().getName())
                         .dueDate(task.getDueDate())
                         .createdTime(task.getCreatedAt())
                         .updatedTime(task.getUpdatedAt())
