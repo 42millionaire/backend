@@ -34,19 +34,35 @@ public class GroupJoinServiceImpl implements GroupJoinService {
         groupJoinRepository.save(groupJoin);
     }
 
-    public GroupJoinListResponse searchAllGroupJoin (Long groupId, HttpSession session) {
-        Groups group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
-
-        Member loginMember = (Member) session.getAttribute("loginMember");
-
-        boolean isAdmin = group.getGroupMembers().stream()
-                .anyMatch(groupMember -> groupMember.getRole().equals("admin") && groupMember.getMember().equals(loginMember));
-
-        if (!isAdmin) {
-            throw new IllegalStateException("권한이 없습니다. 관리자만 그룹에 멤버를 추가할 수 있습니다.");
-        }
-
+//    public GroupJoinListResponse searchAllGroupJoin (Long groupId, HttpSession session) {
+//        Groups group = groupRepository.findById(groupId)
+//                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 그룹입니다."));
+//
+//        Member loginMember = (Member) session.getAttribute("loginMember");
+//
+//        boolean isAdmin = group.getGroupMembers().stream()
+//                .anyMatch(groupMember -> groupMember.getRole().equals("admin") && groupMember.getMember().equals(loginMember));
+//
+//        if (!isAdmin) {
+//            throw new IllegalStateException("권한이 없습니다. 관리자만 그룹에 멤버를 추가할 수 있습니다.");
+//        }
+//
+//        final List<GroupJoin> groupJoins = groupJoinRepository.findAll();
+//
+//        // groupId가 같은 GroupJoin 객체만 필터링
+//        List<GroupJoinResponse> newGroupJoinResponses = groupJoins.stream()
+//                .filter(groupJoin -> groupJoin.getGroups().getId().equals(groupId))  // groupId와 일치하는지 필터링
+//                .map(groupJoin -> GroupJoinResponse.builder()
+//                        .memberId(groupJoin.getMember().getId())
+//                        .name(groupJoin.getMember().getName())
+//                        .createdTime(groupJoin.getCreatedAt()).build())
+//                .collect(Collectors.toList());
+//
+//        return GroupJoinListResponse.builder()
+//                .groupJoinResponses(newGroupJoinResponses)
+//                .build();
+//    }
+    public GroupJoinListResponse searchAllGroupJoin (Long groupId) {
         final List<GroupJoin> groupJoins = groupJoinRepository.findAll();
 
         // groupId가 같은 GroupJoin 객체만 필터링
