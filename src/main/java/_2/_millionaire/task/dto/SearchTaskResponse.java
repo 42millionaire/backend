@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Builder
 public record SearchTaskResponse(Long taskId,
                                  String content,
+                                 String memberName,
                                  LocalDate dueDate,
                                  LocalDateTime createdTime,
                                  LocalDateTime updatedTime,

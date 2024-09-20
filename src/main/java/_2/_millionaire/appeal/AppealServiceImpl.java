@@ -54,7 +54,7 @@ public class AppealServiceImpl implements AppealService{
                                 .memberId(task.getGroupMember().getMember().getId())
                                 .memberName(task.getGroupMember().getMember().getName())
                                 .content(appeal.getContent()) // Appeal의 content 설정
-                                .createTime(appeal.getCreatedAt())
+                                .createdTime(appeal.getCreatedAt())
                                 .build()))
                 .toList();
         return new SearchAppealListResponse(searchAppealResponses);

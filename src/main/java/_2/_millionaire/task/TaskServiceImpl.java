@@ -188,8 +188,11 @@ public class TaskServiceImpl implements TaskService {
         List<Task> tasksInMonth = groupMember.getTasks().stream()
                 .filter(task -> {
                     // Task의 dueDate 필드가 주어진 연도 및 월과 일치하는지 확인
-                    YearMonth taskYearMonth = YearMonth.from(task.getDueDate());
-                    return taskYearMonth.equals(yearMonth);
+                    YearMonth taskDueDateYearMonth = YearMonth.from(task.getDueDate());
+                    if (task.getType().equals("daily"))
+                        return taskDueDateYearMonth.equals(yearMonth);
+                    YearMonth taskCreateDateYearMonth = YearMonth.from(task.getCreatedAt());
+                    return taskDueDateYearMonth.equals(yearMonth) || taskCreateDateYearMonth.equals(yearMonth);
                 })
                 .toList();
 
@@ -198,6 +201,7 @@ public class TaskServiceImpl implements TaskService {
                 .map(task -> SearchTaskResponse.builder()
                         .taskId(task.getId())
                         .content(task.getContent())
+                        .memberName(task.getGroupMember().getMember().getName())
                         .dueDate(task.getDueDate())
                         .createdTime(task.getCreatedAt())
                         .updatedTime(task.getUpdatedAt())
