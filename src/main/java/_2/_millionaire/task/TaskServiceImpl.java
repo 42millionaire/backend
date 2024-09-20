@@ -137,6 +137,7 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new TaskCustomException(TaskErrorCode.TASK_NOT_FOUND));
         return SearchTaskResponse.builder()
                 .taskId(task.getId())
+                .memberName(task.getGroupMember().getMember().getName())
                 .content(task.getContent())
                 .dueDate(task.getDueDate())
                 .createdTime(task.getCreatedAt())

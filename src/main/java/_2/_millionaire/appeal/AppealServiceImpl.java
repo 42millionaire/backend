@@ -65,5 +65,6 @@ public class AppealServiceImpl implements AppealService{
         Appeal appeal = appealRepository.findById(changeAppealStatus.appealId())
                 .orElseThrow(() -> new AppealCustomException(AppealErrorCode.APPEAL_NOT_FOUND));
         appeal.setStatus("processed");
+        appeal.getTask().setStatus(changeAppealStatus.status());
     }
 }
