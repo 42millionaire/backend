@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_DB: millionaire42
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d millionaire42"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  spring:
+    build: .
+    ports:
+      - "8080:8443"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/millionaire42
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1234
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - spring
+    networks:
+      - app-network
+
+volumes:
+  postgres-data:
+    driver_opts:
+      type: none
+      # device: /home/soohlee/data/wordpress
+      # 개인 놑북일시 로컬볼륨 임시경로
+      device: /Users/soohalee/postgres-data
+      o: bind
+
+networks:
+  app-network:
+    driver: bridge
