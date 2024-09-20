@@ -10,6 +10,6 @@ public record SearchAppealResponse(Long taskId,
                                    Long memberId,
                                    String memberName,
                                    String content,
-                                   LocalDateTime createTime
+                                   LocalDateTime createdTime
                                    ) {
 }

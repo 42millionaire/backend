@@ -76,6 +76,8 @@ public class VerificationServiceImpl implements VerificationService{
                 .collect(Collectors.toList());
 
         return SearchVerificationResponse.builder()
+                .title(verification.getTask().getContent())
+                .memberName(verification.getTask().getGroupMember().getMember().getName())
                 .content(verification.getContent())
                 .base64Images(base64Images)
                 .createdTime(verification.getCreatedAt())
