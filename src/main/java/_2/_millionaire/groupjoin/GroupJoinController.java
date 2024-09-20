@@ -21,9 +21,13 @@ public class GroupJoinController {
         return ResponseEntity.status(HttpStatus.CREATED).body("그룹가입 신청이 완료되었습니다.");
     }
 
+//    @GetMapping("/{groupId}")
+//    public ResponseEntity<GroupJoinListResponse> searchAllGroupJoin(@PathVariable(name = "groupId") Long groupId,
+//                                                                    HttpSession session) {
+//        return (ResponseEntity.ok(groupJoinService.searchAllGroupJoin(groupId,session)));
+//    }
     @GetMapping("/{groupId}")
-    public ResponseEntity<GroupJoinListResponse> searchAllGroupJoin(@PathVariable(name = "groupId") Long groupId,
-                                                                    HttpSession session) {
-        return (ResponseEntity.ok(groupJoinService.searchAllGroupJoin(groupId,session)));
+    public ResponseEntity<GroupJoinListResponse> searchAllGroupJoin(@PathVariable(name = "groupId") Long groupId) {
+        return (ResponseEntity.ok(groupJoinService.searchAllGroupJoin(groupId)));
     }
 }
