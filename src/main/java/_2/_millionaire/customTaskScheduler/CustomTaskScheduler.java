@@ -42,7 +42,7 @@ public class CustomTaskScheduler {
         LocalDate today = LocalDate.now();
 
         if (!isHoliday(today))
-            taskService.updateTaskStatus(today);
+            taskService.updateNoneToDeny(today);
     }
 
     boolean isHoliday(LocalDate date) {
