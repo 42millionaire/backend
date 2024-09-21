@@ -1,5 +1,6 @@
 package _2._millionaire.oauth;
 
+import _2._millionaire.oauth.dto.RedirectResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +21,12 @@ public class OauthController {
     private final OAuthService oAuthService;
 
     @GetMapping("/oauth/google")
-    public ResponseEntity<String> googleLogin(HttpServletResponse response) throws IOException {
+    public ResponseEntity<RedirectResponse> googleLogin(HttpServletResponse response) throws IOException {
         String redirectUrl = oAuthService.redirect();
         log.info(redirectUrl);
 //        response.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
 //        response.sendRedirect(redirectUrl);
-        return ResponseEntity.status(HttpStatus.OK).body(redirectUrl);
+        return ResponseEntity.status(HttpStatus.OK).body(RedirectResponse.builder().url(redirectUrl).build());
     }
 
     @GetMapping("/login/oauth2/code/google")
