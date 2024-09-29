@@ -3,10 +3,10 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1234
-      POSTGRES_DB: millionaire42
+    # environment:
+    #   POSTGRES_USER: postgres
+    #   POSTGRES_PASSWORD: 1234
+    #   POSTGRES_DB: millionaire42
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
@@ -16,6 +16,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    env_file:
+      - .env
 
   spring:
     build:
@@ -23,15 +25,17 @@ services:
       dockerfile: Dockerfile
 #    ports:
 #      - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/millionaire42
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: 1234
+    # environment:
+    #   SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/millionaire42
+    #   SPRING_DATASOURCE_USERNAME: postgres
+    #   SPRING_DATASOURCE_PASSWORD: 1234
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - app-network
+    env_file:
+      - .env
 
   nginx:
     image: nginx:latest
@@ -51,7 +55,7 @@ volumes:
       type: none
       # device: /home/soohlee/data/wordpress
       # 개인 놑북일시 로컬볼륨 임시경로
-      device: ~/postgres-data
+      device: ${HOME}/postgres-data
       o: bind
 
 networks:
