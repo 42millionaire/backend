@@ -51,7 +51,7 @@ volumes:
       type: none
       # device: /home/soohlee/data/wordpress
       # 개인 놑북일시 로컬볼륨 임시경로
-      device: /Users/soohalee/postgres-data
+      device: ~/postgres-data
       o: bind
 
 networks:
