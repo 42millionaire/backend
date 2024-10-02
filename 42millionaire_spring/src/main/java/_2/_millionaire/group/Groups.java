@@ -6,6 +6,7 @@ import _2._millionaire.groupmember.GroupMember;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import lombok.*;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class Groups extends BaseEntity {
     @Column(length = 200)
     private String groupName;
 
-    //타입 임시지정함.
+    //미사용 칼럼
     private String groupImage;
 
     @Setter
@@ -38,4 +39,22 @@ public class Groups extends BaseEntity {
     @Column(length = 500)
     private String notice;
 
+    private Integer monthPenalty;
+
+    private Integer weeklyPenalty;
+
+    private Integer dailyPenalty;
+
+    @PrePersist
+    public void setDefaultPenalty() {
+        if (this.monthPenalty == null) {
+            this.monthPenalty = 0;
+        }
+        if (this.weeklyPenalty == null) {
+            this.weeklyPenalty = 0;
+        }
+        if (this.dailyPenalty == null) {
+            this.dailyPenalty = 0;
+        }
+    }
 }
