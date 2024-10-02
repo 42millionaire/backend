@@ -1,5 +1,6 @@
 package _2._millionaire.groupmember;
 
+import _2._millionaire.groupmember.dto.GroupMemberPenaltyListResponse;
 import _2._millionaire.groupmember.dto.GroupMemberRequest;
 import _2._millionaire.groupmember.dto.RollGroupMemberRequest;
 import _2._millionaire.groupmember.dto.SearchGroupMemberListResponse;
@@ -40,4 +41,13 @@ public class GroupMemberController {
         groupMemberService.changeRoleGroupMember(rollGroupMemberRequest, session);
         return ResponseEntity.status(HttpStatus.OK).body("그룹멤버의 role이 변경되었습니다.");
     }
+
+    @GetMapping("/penalty")
+    public ResponseEntity<GroupMemberPenaltyListResponse> findGroupMemberPenalty(@RequestParam final Long groupId,
+                                                                                 @RequestParam final Integer year,
+                                                                                 @RequestParam final Integer month,
+                                                                                 HttpSession session){
+
+        return ResponseEntity.status(HttpStatus.OK).body(groupMemberService.calculatePenaltyByGroupAndDate(groupId, year, month, session));
+     }
 }
