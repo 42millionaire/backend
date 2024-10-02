@@ -57,4 +57,12 @@ public class Groups extends BaseEntity {
             this.dailyPenalty = 0;
         }
     }
+
+    public void setPenalty(Integer monthlyPenalty,
+                           Integer weeklyPenalty,
+                           Integer dailyPenalty){
+        this.monthPenalty = monthlyPenalty;
+        this.weeklyPenalty = weeklyPenalty;
+        this.dailyPenalty = dailyPenalty;
+    }
 }
