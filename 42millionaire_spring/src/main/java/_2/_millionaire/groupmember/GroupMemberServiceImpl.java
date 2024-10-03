@@ -4,14 +4,12 @@ import _2._millionaire.group.GroupRepository;
 import _2._millionaire.group.Groups;
 import _2._millionaire.groupjoin.GroupJoin;
 import _2._millionaire.groupjoin.GroupJoinRepository;
-import _2._millionaire.groupmember.dto.GroupMemberRequest;
-import _2._millionaire.groupmember.dto.RollGroupMemberRequest;
+import _2._millionaire.groupmember.dto.*;
 import _2._millionaire.group.exception.GroupCustomException;
 import _2._millionaire.group.exception.GroupErrorCode;
-import _2._millionaire.groupmember.dto.SearchGroupMemberListResponse;
-import _2._millionaire.groupmember.dto.SearchGroupMemberResponse;
 import _2._millionaire.member.Member;
 import _2._millionaire.member.MemberRepository;
+import _2._millionaire.task.Task;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.Group;
@@ -19,8 +17,10 @@ import org.hibernate.metamodel.model.domain.internal.MapMember;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Objects;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -137,5 +137,65 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
             targetGroupMember.setRole("admin");
         else
             targetGroupMember.setRole("member");
+    }
+
+    public GroupMemberPenaltyListResponse calculatePenaltyByGroupAndDate(Long groupId,
+                                                                         Integer year,
+                                                                         Integer month,
+                                                                         HttpSession session) {
+
+        Groups group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new GroupCustomException(GroupErrorCode.GROUP_NOT_FOUND));
+
+        List<GroupMemberPenaltyResponse> groupMemberPenaltyResponses = new ArrayList<>();
+        YearMonth targetDate = YearMonth.of(year, month);
+
+        for (GroupMember groupmember : group.getGroupMembers()) {
+            Long penalty = 0L;
+
+            // task 타입별로 이미 카운트했는지 여부를 저장할 플래그
+            boolean monthlyCounted = false;
+            Set<LocalDate> countedWeeks = new HashSet<>();
+            Set<LocalDate> countedDays = new HashSet<>();
+
+            for (Task task : groupmember.getTasks()) {
+                YearMonth taskYearMonth = YearMonth.from(task.getDueDate());
+
+                if (task.getStatus().equals("deny") && taskYearMonth.equals(targetDate)) {
+                    // Monthly 타입: 한 달에 한 번만 패널티 적용
+                    if (task.getType().equals("monthly") && !monthlyCounted) {
+                        penalty += group.getMonthPenalty();
+                        monthlyCounted = true; // 패널티 한 번 계산 후 플래그를 true로 설정
+                    }
+                    // Weekly 타입: 동일한 주에 한 번만 패널티 적용
+                    if (task.getType().equals("weekly")) {
+                        LocalDate taskWeek = task.getDueDate().with(DayOfWeek.SUNDAY); // 해당 주의 시작일(일요일) 기준
+                        if (!countedWeeks.contains(taskWeek)) {
+                            penalty += group.getWeeklyPenalty();
+                            countedWeeks.add(taskWeek); // 해당 주가 이미 카운트되었는지 기록
+                        }
+                    }
+                    // Daily 타입: 동일한 날짜에 한 번만 패널티 적용
+                    if (task.getType().equals("daily")) {
+                        LocalDate taskDay = task.getDueDate();
+                        if (!countedDays.contains(taskDay)) {
+                            penalty += group.getDailyPenalty();
+                            countedDays.add(taskDay); // 해당 날짜가 이미 카운트되었는지 기록
+                        }
+                    }
+                }
+            }
+            groupMemberPenaltyResponses.add(
+                    GroupMemberPenaltyResponse.builder()
+                            .memberId(groupmember.getMember().getId())
+                            .memberName(groupmember.getMember().getName())
+                            .penalty(penalty)
+                            .build()
+            );
+        }
+
+        return GroupMemberPenaltyListResponse.builder()
+                .members(groupMemberPenaltyResponses)
+                .build();
     }
 }

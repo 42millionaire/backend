@@ -1,6 +1,8 @@
 package _2._millionaire.group;
 
 import _2._millionaire.group.dto.*;
+import _2._millionaire.group.exception.GroupCustomException;
+import _2._millionaire.group.exception.GroupErrorCode;
 import _2._millionaire.member.Member;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -113,5 +115,14 @@ public class GroupServiceImpl implements  GroupService{
                 .groupName(group.getGroupName()).build()).collect(Collectors.toList());
 
         return GroupListResponse.builder().groupResponses(groupResponses).build();
+    }
+
+    @Transactional
+    public void updateGroupPenalty(UpdatePenaltyRequest updatePenaltyRequest) {
+        Groups groups = groupRepository.findById(updatePenaltyRequest.groupId())
+                .orElseThrow(() -> new GroupCustomException(GroupErrorCode.GROUP_NOT_FOUND));
+        groups.setPenalty(updatePenaltyRequest.monthlyPenalty(),
+                updatePenaltyRequest.weeklyPenalty(),
+                updatePenaltyRequest.dailyPenalty());
     }
 }

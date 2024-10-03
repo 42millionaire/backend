@@ -65,4 +65,9 @@ public class GroupController {
         return (ResponseEntity.ok(groupService.searchAllGroup()));
     }
 
+    @PostMapping("/penalty")
+    public ResponseEntity<String> updateGroupPenalty(@RequestBody UpdatePenaltyRequest updatePenaltyRequest){
+        groupService.updateGroupPenalty(updatePenaltyRequest);
+        return ResponseEntity.status(HttpStatus.OK).body("벌금 설정되었습니다.");
+    }
 }
