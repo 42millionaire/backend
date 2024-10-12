@@ -202,6 +202,7 @@ public class TaskServiceImpl implements TaskService {
                 .map(task -> SearchTaskResponse.builder()
                         .taskId(task.getId())
                         .content(task.getContent())
+                        .type(task.getType())
                         .memberName(task.getGroupMember().getMember().getName())
                         .dueDate(task.getDueDate())
                         .createdTime(task.getCreatedAt())
@@ -374,6 +375,7 @@ public class TaskServiceImpl implements TaskService {
                 Task newTask = Task.builder()
                         .content("목표 설정 기한을 놓쳤습니다.") // 자동 생성 Task에 대한 기본 내용
                         .dueDate(dueDate)
+                        .type("daily")
                         .status("deny") // 상태를 "deny"로 설정
                         .groupMember(groupMember) // 해당 그룹 멤버 설정
                         .build();
