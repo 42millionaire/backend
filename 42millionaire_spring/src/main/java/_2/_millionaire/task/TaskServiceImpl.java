@@ -22,6 +22,7 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
@@ -373,10 +374,69 @@ public class TaskServiceImpl implements TaskService {
             if (!taskExists) {
                 // Task가 없으면 새로운 Task 생성
                 Task newTask = Task.builder()
-                        .content("목표 설정 기한을 놓쳤습니다.") // 자동 생성 Task에 대한 기본 내용
+                        .content("일일 목표 설정 기한이 지났습니다.") // 자동 생성 Task에 대한 기본 내용
                         .dueDate(dueDate)
                         .type("daily")
                         .status("deny") // 상태를 "deny"로 설정
+                        .groupMember(groupMember) // 해당 그룹 멤버 설정
+                        .build();
+                taskRepository.save(newTask);
+            }
+        }
+    }
+
+    @Transactional
+    public void createTaskForNextWeek(LocalDate dueDate) {
+        // 그룹 멤버들 조회
+        List<GroupMember> groupMembers = groupMemberRepository.findAll();
+
+        // 주차의 시작일(월요일)과 끝일(일요일)을 계산
+        LocalDate startOfWeek = dueDate.with(DayOfWeek.MONDAY);
+        LocalDate endOfWeek = dueDate.with(DayOfWeek.SUNDAY);
+
+        for (GroupMember groupMember : groupMembers) {
+            // 해당 그룹 멤버가 해당 주에 'weekly' 타입의 Task가 있는지 확인
+            boolean taskExists = taskRepository.existsByGroupMemberAndTypeAndDueDateBetween(
+                    groupMember, "weekly", startOfWeek, endOfWeek
+            );
+
+            if (!taskExists) {
+                // 주차의 일요일을 dueDate로 하는 새로운 Task 생성
+                Task newTask = Task.builder()
+                        .content("주간 목표 설정 기한이 지났습니다.") // 기본 Task 내용
+                        .dueDate(endOfWeek) // 해당 주차의 일요일을 기한으로 설정
+                        .type("weekly") // 주간 Task
+                        .status("deny") // 상태를 'pending'으로 설정
+                        .groupMember(groupMember) // 해당 그룹 멤버 설정
+                        .build();
+                taskRepository.save(newTask);
+            }
+        }
+    }
+
+    @Transactional
+    public void createTaskForThisMonth(LocalDate today) {
+        // 모든 그룹 멤버를 조회
+        List<GroupMember> groupMembers = groupMemberRepository.findAll();
+
+        // 이번 달의 첫 번째 날 (1일)
+        LocalDate startOfMonth = today.withDayOfMonth(1);
+        // 이번 달의 마지막 날 계산
+        LocalDate endOfMonth = today.withDayOfMonth(today.lengthOfMonth());
+
+        for (GroupMember groupMember : groupMembers) {
+            // 해당 그룹 멤버가 이번 달에 'monthly' 타입의 Task를 가지고 있는지 확인
+            boolean taskExists = taskRepository.existsByGroupMemberAndTypeAndDueDateBetween(
+                    groupMember, "monthly", startOfMonth, endOfMonth
+            );
+
+            if (!taskExists) {
+                // monthly Task가 없을 경우 새로운 Task 생성
+                Task newTask = Task.builder()
+                        .content("월 목표 설정 기한이 지났습니다.") // 기본 Task 내용
+                        .dueDate(startOfMonth) // 이번 달 1일을 기한으로 설정
+                        .type("monthly") // 월간 Task
+                        .status("deny") // 상태를 'pending'으로 설정
                         .groupMember(groupMember) // 해당 그룹 멤버 설정
                         .build();
                 taskRepository.save(newTask);
@@ -391,4 +451,6 @@ public class TaskServiceImpl implements TaskService {
             task.updateStatus("deny");
         }
     }
+
+
 }

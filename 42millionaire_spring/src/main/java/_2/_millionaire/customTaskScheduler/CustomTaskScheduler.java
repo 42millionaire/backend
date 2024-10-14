@@ -2,6 +2,7 @@ package _2._millionaire.customTaskScheduler;
 
 import _2._millionaire.task.TaskServiceImpl;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
@@ -18,29 +19,52 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomTaskScheduler {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomTaskScheduler.class);
     private final TaskServiceImpl taskService;
     private final RestTemplate restTemplate = new RestTemplate(); // RestTemplate 초기화
 
+
 //    @Scheduled(cron = "*/1 * * * * *")
+    /**
+     * daily Task 등록 확인 스케줄러
+     * 매일 새벽 3시 태스크를 생성하지 않았다면 새로운 태스크 pend 상태로 생성
+     */
     @Scheduled(cron = "0 0 3 ? * MON-FRI")
-    public void checkAndCreatePendingTasks() {
+    public void checkDailyTaskAndCreateDenyTasks() {
         LocalDate today = LocalDate.now();
 
         if (!isHoliday(today)) {
-            logger.info("공휴일이 아닙니다. task를 생성합니다.");
-            taskService.createTaskForTomorrow(today); // 오늘이 공휴일이 아니라면 오늘의 테스트 생성
+            log.info("공휴일이 아닙니다. task를 생성합니다.");
+            taskService.createTaskForTomorrow(today); // 오늘이 공휴일이 아니라면 오늘의 테스크 생성
         } else {
-            logger.info("공휴일입니다. task를 생성하지 않습니다.");
+            log.info("공휴일입니다. task를 생성하지 않습니다.");
         }
     }
 
-    @Scheduled(cron = "0 0 3 ? * MON-FRI")
+    /**
+     * weekly Task 등록 확인 스케줄러
+     * 매주 일요일 23시 59분 58초에 다음주 weekly Task가 생성되지 않았다면 deny 상태로 새로 생성
+     */
+    @Scheduled(cron = "58 59 23 * * SUN")
+    public void checkWeeklyTaskAndCreateDenyTask() {
+        LocalDate tomorrow = LocalDate.now().plusDays(1);
+        taskService.createTaskForNextWeek(tomorrow);
+    }
+
+    @Scheduled()
+    public void checkMonthlyTaskAndCreateDenyTask(){
+        LocalDate today = LocalDate.now();
+        taskService.createTaskForThisMonth(today);
+    }
+
+    /**
+     * 매일 정각까지 none (인증 미제출) 상태의 task를 deny시킴
+     */
+    @Scheduled(cron = "59 59 23 ? * MON-FRI")
     public void updateTaskStatusToDeny(){
         LocalDate today = LocalDate.now();
-
         if (!isHoliday(today))
             taskService.updateNoneToDeny(today);
     }
@@ -106,7 +130,7 @@ public class CustomTaskScheduler {
             }
 
         } catch (Exception e) {
-            logger.error("API 호출 중 오류 발생: ", e);
+            log.error("API 호출 중 오류 발생: ", e);
         }
 
         return false; // 공휴일이 아니면 false 반환
