@@ -3,7 +3,8 @@ package _2._millionaire.group.exception;
 import _2._millionaire.BaseErrorCode;
 
 public enum GroupErrorCode implements BaseErrorCode {
-    GROUP_NOT_FOUND("존재하지 않는 그룹입니다.", 404);
+    GROUP_NOT_FOUND("존재하지 않는 그룹입니다.", 404),
+    NOT_ADMIN_OF_GROUP("그룹의 관리자가 아닙니다.", 403);
 
     private final String message;
     private final int statusCode;
