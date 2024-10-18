@@ -53,7 +53,7 @@ public class CustomTaskScheduler {
         taskService.createTaskForNextWeek(tomorrow);
     }
 
-    @Scheduled()
+    @Scheduled(cron = "59 59 23 1 * ?")
     public void checkMonthlyTaskAndCreateDenyTask(){
         LocalDate today = LocalDate.now();
         taskService.createTaskForThisMonth(today);
