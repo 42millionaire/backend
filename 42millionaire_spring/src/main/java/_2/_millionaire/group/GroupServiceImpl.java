@@ -125,4 +125,14 @@ public class GroupServiceImpl implements  GroupService{
                 updatePenaltyRequest.weeklyPenalty(),
                 updatePenaltyRequest.dailyPenalty());
     }
+
+    public GroupPenaltyResponse searchGroupPenalty(Long groupId) {
+        Groups groups = groupRepository.findById(groupId).orElseThrow(() -> new GroupCustomException(GroupErrorCode.GROUP_NOT_FOUND));
+
+        return GroupPenaltyResponse.builder()
+                .dailyPenalty(groups.getDailyPenalty())
+                .weeklyPenalty(groups.getWeeklyPenalty())
+                .monthlyPenalty(groups.getMonthPenalty())
+                .build();
+    }
 }

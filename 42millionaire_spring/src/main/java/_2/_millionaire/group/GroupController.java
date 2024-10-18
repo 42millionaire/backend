@@ -56,8 +56,7 @@ public class GroupController {
 
     @GetMapping("/notice/{groupId}")
     public ResponseEntity<NoticeResponse> searchGroupNotice(@PathVariable("groupId") Long groupId) {
-        NoticeResponse noticeResponse = groupService.searchGroupNotice(groupId);
-        return ResponseEntity.ok(noticeResponse);
+        return ResponseEntity.ok(groupService.searchGroupNotice(groupId));
     }
 
     @GetMapping("")
@@ -69,5 +68,9 @@ public class GroupController {
     public ResponseEntity<String> updateGroupPenalty(@RequestBody UpdatePenaltyRequest updatePenaltyRequest){
         groupService.updateGroupPenalty(updatePenaltyRequest);
         return ResponseEntity.status(HttpStatus.OK).body("벌금 설정되었습니다.");
+    }
+    @GetMapping("/penalty/{groupId}")
+    public ResponseEntity<GroupPenaltyResponse> searchGroupPenalty(@PathVariable("groupId") Long groupId){
+        return ResponseEntity.status(HttpStatus.OK).body(groupService.searchGroupPenalty(groupId));
     }
 }
