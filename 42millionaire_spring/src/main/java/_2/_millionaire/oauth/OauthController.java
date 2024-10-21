@@ -1,5 +1,6 @@
 package _2._millionaire.oauth;
 
+import _2._millionaire.oauth.dto.LoginMemberResponse;
 import _2._millionaire.oauth.dto.RedirectResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +31,8 @@ public class OauthController {
     }
 
     @GetMapping("/login/oauth2/code/google")
-    public ResponseEntity<String> successGoogleLogin(@RequestParam("code") String accessCode){
-        return oAuthService.getGoogleAccessToken(accessCode);
+    public ResponseEntity<LoginMemberResponse> successGoogleLogin(@RequestParam("code") String accessCode){
+        return ResponseEntity.status(HttpStatus.OK).body(oAuthService.signInOrSignUp(accessCode));
     }
 }
 

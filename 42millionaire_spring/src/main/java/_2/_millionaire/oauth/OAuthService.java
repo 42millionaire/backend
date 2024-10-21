@@ -2,6 +2,7 @@ package _2._millionaire.oauth;
 
 import _2._millionaire.member.Member;
 import _2._millionaire.member.MemberRepository;
+import _2._millionaire.oauth.dto.LoginMemberResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpSession;
@@ -42,7 +43,7 @@ public class OAuthService {
 
     private final MemberRepository memberRepository;
     private final HttpSession session; // 세션 주입
-    public ResponseEntity<String> getGoogleAccessToken(String accessCode) {
+    public LoginMemberResponse signInOrSignUp(String accessCode) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -62,7 +63,9 @@ public class OAuthService {
         if (responseEntity.getStatusCode() == HttpStatus.OK){
             String accessToken = extractAccessToken(responseEntity.getBody());
             Member member = getOrCreateMember(accessToken);
-            return responseEntity;
+            return LoginMemberResponse.builder()
+                    .memberId(member.getId())
+                    .build();
         }
         return null;
     }
