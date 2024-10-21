@@ -43,6 +43,11 @@ public class GroupController {
         return ResponseEntity.status(HttpStatus.OK).body("그룹이 삭제 되었습니다.");
     }
 
+    @GetMapping("/{groupId}")
+    public ResponseEntity<GroupResponse> searchGroup(@PathVariable Long groupId){
+        return ResponseEntity.status(HttpStatus.OK).body(groupService.searchGroup(groupId));
+    }
+
 //    @PostMapping("/notice")
 //    public ResponseEntity<String> registerNotice(@RequestBody RegisterNoticeRequest registerNoticeRequest, HttpSession session) {
 //        groupService.registerNotice(registerNoticeRequest, session);

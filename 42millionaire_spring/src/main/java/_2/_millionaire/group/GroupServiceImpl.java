@@ -135,4 +135,12 @@ public class GroupServiceImpl implements  GroupService{
                 .monthlyPenalty(groups.getMonthPenalty())
                 .build();
     }
+
+    public GroupResponse searchGroup(Long groupId) {
+        Groups group = groupRepository.findById(groupId).orElseThrow(() -> new GroupCustomException(GroupErrorCode.GROUP_NOT_FOUND));
+        return GroupResponse.builder()
+                .groupId(group.getId())
+                .groupName(group.getGroupName())
+                .build();
+    }
 }
