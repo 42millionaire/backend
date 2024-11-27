@@ -25,7 +25,7 @@ public class AdminService implements AdminServiceImpl{
             // AdminMemberResponse 생성 및 반환
             return new AdminMemberResponse(loginMember.getId(), loginMember.getName(), true);
         } else {
-            return new AdminMemberResponse(loginMember.getId(), loginMember.getName(), false);
+            throw new AdminCustomException(AdminErrorCode.NOT_ADMIN);
         }
     }
 }

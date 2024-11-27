@@ -74,6 +74,7 @@ public class GroupController {
         groupService.updateGroupPenalty(updatePenaltyRequest);
         return ResponseEntity.status(HttpStatus.OK).body("벌금 설정되었습니다.");
     }
+
     @GetMapping("/penalty/{groupId}")
     public ResponseEntity<GroupPenaltyResponse> searchGroupPenalty(@PathVariable("groupId") Long groupId){
         return ResponseEntity.status(HttpStatus.OK).body(groupService.searchGroupPenalty(groupId));
