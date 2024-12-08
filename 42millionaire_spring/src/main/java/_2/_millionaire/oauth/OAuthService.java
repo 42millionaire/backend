@@ -65,6 +65,7 @@ public class OAuthService {
             Member member = getOrCreateMember(accessToken);
             return LoginMemberResponse.builder()
                     .memberId(member.getId())
+                    .memberName(member.getName())
                     .build();
         }
         return null;
