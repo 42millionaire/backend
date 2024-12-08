@@ -139,6 +139,7 @@ public class TaskServiceImpl implements TaskService {
         return SearchTaskResponse.builder()
                 .taskId(task.getId())
                 .memberName(task.getGroupMember().getMember().getName())
+                .type(task.getType())
                 .content(task.getContent())
                 .dueDate(task.getDueDate())
                 .createdTime(task.getCreatedAt())
