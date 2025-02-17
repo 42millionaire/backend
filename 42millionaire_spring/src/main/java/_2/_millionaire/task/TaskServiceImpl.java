@@ -192,10 +192,10 @@ public class TaskServiceImpl implements TaskService {
                 .filter(task -> {
                     // Task의 dueDate 필드가 주어진 연도 및 월과 일치하는지 확인
                     YearMonth taskDueDateYearMonth = YearMonth.from(task.getDueDate());
-                    if (task.getType().equals("daily"))
-                        return taskDueDateYearMonth.equals(yearMonth);
                     YearMonth taskCreateDateYearMonth = YearMonth.from(task.getCreatedAt());
-                    return taskDueDateYearMonth.equals(yearMonth) || taskCreateDateYearMonth.equals(yearMonth);
+                    if (task.getType().equals("weekly"))
+                        return taskDueDateYearMonth.equals(yearMonth) || taskCreateDateYearMonth.equals(yearMonth);
+                    return taskDueDateYearMonth.equals(yearMonth);
                 })
                 .toList();
 
