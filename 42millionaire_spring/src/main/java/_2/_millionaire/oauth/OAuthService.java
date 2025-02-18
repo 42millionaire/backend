@@ -5,10 +5,13 @@ import _2._millionaire.member.MemberRepository;
 import _2._millionaire.oauth.dto.LoginMemberResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -42,8 +45,7 @@ public class OAuthService {
     private String LOGIN_REDIRECT_URL;
 
     private final MemberRepository memberRepository;
-    private final HttpSession session; // 세션 주입
-    public LoginMemberResponse signInOrSignUp(String accessCode) {
+    public LoginMemberResponse signInOrSignUp(String accessCode, HttpServletRequest sr) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -63,8 +65,11 @@ public class OAuthService {
         if (responseEntity.getStatusCode() == HttpStatus.OK){
             String accessToken = extractAccessToken(responseEntity.getBody());
             Member member = getOrCreateMember(accessToken);
+            HttpSession session = sr.getSession();
             session.setMaxInactiveInterval(30 * 60);
             session.setAttribute("user", member);
+            log.info("세션 ID: " + session.getId());
+            log.info("member ID: " + member.getId());
             return LoginMemberResponse.builder()
                     .memberId(member.getId())
                     .memberName(member.getName())
@@ -123,9 +128,7 @@ public class OAuthService {
                 memberRepository.save(member);
                 log.info("[" + name + "]이 회원가입 되었습니다.");
             }
-            session.setAttribute("user", member);
-            log.info("세션 ID: " + session.getId());
-            log.info("member ID: " + member.getId());
+
             return member; // 로그인 또는 새로 생성한 사용자 반환
         }
         throw new RuntimeException("사용자 정보를 가져오는 데 실패했습니다.");
