@@ -1,9 +1,7 @@
 package _2._millionaire.groupmember;
 
-import _2._millionaire.groupmember.dto.GroupMemberPenaltyListResponse;
-import _2._millionaire.groupmember.dto.GroupMemberRequest;
-import _2._millionaire.groupmember.dto.RollGroupMemberRequest;
-import _2._millionaire.groupmember.dto.SearchGroupMemberListResponse;
+import _2._millionaire.groupmember.dto.*;
+import _2._millionaire.member.Member;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +17,12 @@ public class GroupMemberController {
     @GetMapping("/{groupId}")
     public ResponseEntity<SearchGroupMemberListResponse> searchAllGroupMembers(@PathVariable("groupId") Long groupId) {
         return ResponseEntity.ok(groupMemberService.searchAllGroupMembers(groupId));
+    }
+
+    @GetMapping("/check/{groupId}")
+    public ResponseEntity<Boolean> checkGroupMember(@PathVariable("groupId") Long groupId, HttpSession session) {
+        return ResponseEntity.ok(groupMemberService.checkGroupMember(groupId, (Member) session.getAttribute("user")));
+
     }
 
     @PostMapping("")

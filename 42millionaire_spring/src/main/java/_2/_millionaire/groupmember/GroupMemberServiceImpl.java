@@ -4,11 +4,15 @@ import _2._millionaire.group.GroupRepository;
 import _2._millionaire.group.Groups;
 import _2._millionaire.groupjoin.GroupJoin;
 import _2._millionaire.groupjoin.GroupJoinRepository;
+import _2._millionaire.groupjoin.GroupJoinServiceImpl;
+import _2._millionaire.groupjoin.dto.GroupJoinResponse;
 import _2._millionaire.groupmember.dto.*;
 import _2._millionaire.group.exception.GroupCustomException;
 import _2._millionaire.group.exception.GroupErrorCode;
 import _2._millionaire.member.Member;
 import _2._millionaire.member.MemberRepository;
+import _2._millionaire.member.exception.MemberCustomException;
+import _2._millionaire.member.exception.MemberErrorCode;
 import _2._millionaire.task.Task;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +36,7 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
     private final MemberRepository memberRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final GroupJoinRepository groupJoinRepository;
+    private final GroupJoinServiceImpl groupJoinService;
 
     public SearchGroupMemberListResponse searchAllGroupMembers(Long groupId) {
         // groupId로 그룹을 찾고 없으면 예외를 던짐
@@ -197,5 +202,22 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
         return GroupMemberPenaltyListResponse.builder()
                 .members(groupMemberPenaltyResponses)
                 .build();
+    }
+
+    public boolean checkGroupMember(Long groupId, Member user) {
+        Groups groups = groupRepository.findById(groupId)
+                .orElseThrow(() -> new GroupCustomException(GroupErrorCode.GROUP_NOT_FOUND));
+        boolean isMember = groups.getGroupMembers().stream()
+                .anyMatch(member -> member.equals(user));
+        if (isMember) {
+            return true;
+        } else {
+            List<Member> membersWithJoinHistory = groupJoinRepository.findByGroups(groupId);
+            boolean hasJoinHistory = membersWithJoinHistory.stream()
+                    .anyMatch(member -> member.equals(user));
+            if (hasJoinHistory)
+                throw new GroupCustomException(GroupErrorCode.ALREADY_JOIN_REQUEST_MEMBER);
+            throw new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND);
+        }
     }
 }
