@@ -9,6 +9,8 @@ import _2._millionaire.groupjoin.dto.GroupJoinResponse;
 import _2._millionaire.groupmember.dto.*;
 import _2._millionaire.group.exception.GroupCustomException;
 import _2._millionaire.group.exception.GroupErrorCode;
+import _2._millionaire.groupmember.exception.GroupMemberCustomException;
+import _2._millionaire.groupmember.exception.GroupMemberErrorCode;
 import _2._millionaire.member.Member;
 import _2._millionaire.member.MemberRepository;
 import _2._millionaire.member.exception.MemberCustomException;
@@ -217,7 +219,7 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
                     .anyMatch(member -> member.equals(user));
             if (hasJoinHistory)
                 throw new GroupCustomException(GroupErrorCode.ALREADY_JOIN_REQUEST_MEMBER);
-            throw new MemberCustomException(MemberErrorCode.MEMBER_NOT_FOUND);
+            throw new GroupMemberCustomException(GroupMemberErrorCode.MEMBER_NOT_IN_GROUP);
         }
     }
 }

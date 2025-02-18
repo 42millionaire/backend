@@ -22,7 +22,6 @@ public class GroupMemberController {
     @GetMapping("/check/{groupId}")
     public ResponseEntity<Boolean> checkGroupMember(@PathVariable("groupId") Long groupId, HttpSession session) {
         return ResponseEntity.ok(groupMemberService.checkGroupMember(groupId, (Member) session.getAttribute("user")));
-
     }
 
     @PostMapping("")
