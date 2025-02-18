@@ -214,7 +214,7 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
         if (isMember) {
             return true;
         } else {
-            List<Member> membersWithJoinHistory = groupJoinRepository.findByGroups(groupId);
+            List<Member> membersWithJoinHistory = groupJoinRepository.findMembersByGroupId(groupId);
             boolean hasJoinHistory = membersWithJoinHistory.stream()
                     .anyMatch(member -> member.equals(user));
             if (hasJoinHistory)
