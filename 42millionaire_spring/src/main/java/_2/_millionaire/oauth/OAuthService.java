@@ -63,6 +63,8 @@ public class OAuthService {
         if (responseEntity.getStatusCode() == HttpStatus.OK){
             String accessToken = extractAccessToken(responseEntity.getBody());
             Member member = getOrCreateMember(accessToken);
+            session.setMaxInactiveInterval(30 * 60);
+            session.setAttribute("user", member);
             return LoginMemberResponse.builder()
                     .memberId(member.getId())
                     .memberName(member.getName())
