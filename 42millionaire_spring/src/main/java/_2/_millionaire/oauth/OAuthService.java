@@ -45,7 +45,7 @@ public class OAuthService {
     private String LOGIN_REDIRECT_URL;
 
     private final MemberRepository memberRepository;
-    public LoginMemberResponse signInOrSignUp(String accessCode, HttpServletRequest sr, HttpServletResponse res) {
+    public LoginMemberResponse signInOrSignUp(String accessCode, HttpServletRequest sr) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
