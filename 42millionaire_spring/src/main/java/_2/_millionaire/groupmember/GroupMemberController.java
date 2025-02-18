@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/groupmember")
 @RequiredArgsConstructor
+@SessionAttributes("user")
 public class GroupMemberController {
     private final GroupMemberServiceImpl groupMemberService;
 
@@ -21,7 +22,7 @@ public class GroupMemberController {
 
     @GetMapping("/check/{groupId}")
     public ResponseEntity<Boolean> checkGroupMember(@PathVariable("groupId") Long groupId, HttpSession session) {
-        return ResponseEntity.ok(groupMemberService.checkGroupMember(groupId, (Member) session.getAttribute("user")));
+        return ResponseEntity.ok(groupMemberService.checkGroupMember(groupId, session));
     }
 
     @PostMapping("")

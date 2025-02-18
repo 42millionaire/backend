@@ -5,7 +5,6 @@ import _2._millionaire.group.Groups;
 import _2._millionaire.groupjoin.GroupJoin;
 import _2._millionaire.groupjoin.GroupJoinRepository;
 import _2._millionaire.groupjoin.GroupJoinServiceImpl;
-import _2._millionaire.groupjoin.dto.GroupJoinResponse;
 import _2._millionaire.groupmember.dto.*;
 import _2._millionaire.group.exception.GroupCustomException;
 import _2._millionaire.group.exception.GroupErrorCode;
@@ -13,8 +12,6 @@ import _2._millionaire.groupmember.exception.GroupMemberCustomException;
 import _2._millionaire.groupmember.exception.GroupMemberErrorCode;
 import _2._millionaire.member.Member;
 import _2._millionaire.member.MemberRepository;
-import _2._millionaire.member.exception.MemberCustomException;
-import _2._millionaire.member.exception.MemberErrorCode;
 import _2._millionaire.task.Task;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -206,7 +203,8 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
                 .build();
     }
 
-    public boolean checkGroupMember(Long groupId, Member user) {
+    public boolean checkGroupMember(Long groupId, HttpSession session) {
+        Member user = (Member) session.getAttribute("user");
         Groups groups = groupRepository.findById(groupId)
                 .orElseThrow(() -> new GroupCustomException(GroupErrorCode.GROUP_NOT_FOUND));
 
