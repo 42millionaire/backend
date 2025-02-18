@@ -1,12 +1,3 @@
----
-name: Bug report
-about: Describe this issue template's purpose here.
-title: ''
-labels: bug
-assignees: ''
-
----
-
 # 🐛 버그 설명
 - 버그에 대한 간단한 설명을 작성해주세요.
 
