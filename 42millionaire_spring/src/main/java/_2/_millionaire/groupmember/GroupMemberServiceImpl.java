@@ -209,17 +209,23 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
     public boolean checkGroupMember(Long groupId, Member user) {
         Groups groups = groupRepository.findById(groupId)
                 .orElseThrow(() -> new GroupCustomException(GroupErrorCode.GROUP_NOT_FOUND));
+
         boolean isMember = groups.getGroupMembers().stream()
-                .anyMatch(member -> member.equals(user));
+                .anyMatch(member -> member.getId().equals(user.getId()));
+
         if (isMember) {
             return true;
         } else {
             List<Member> membersWithJoinHistory = groupJoinRepository.findMembersByGroupId(groupId);
             boolean hasJoinHistory = membersWithJoinHistory.stream()
-                    .anyMatch(member -> member.equals(user));
-            if (hasJoinHistory)
+                    .anyMatch(member -> member.getId().equals(user.getId()));
+
+            if (hasJoinHistory) {
                 throw new GroupCustomException(GroupErrorCode.ALREADY_JOIN_REQUEST_MEMBER);
+            }
+
             throw new GroupMemberCustomException(GroupMemberErrorCode.MEMBER_NOT_IN_GROUP);
         }
     }
+
 }
