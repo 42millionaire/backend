@@ -1,12 +1,3 @@
----
-name: feature
-about: Describe this issue template's purpose here.
-title: ''
-labels: enhancement
-assignees: ''
-
----
-
 # ✨ 기능 설명
 - 추가하고자 하는 기능에 대한 간단한 설명을 작성해주세요.
 
