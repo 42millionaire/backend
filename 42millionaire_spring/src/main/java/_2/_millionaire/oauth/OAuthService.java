@@ -122,6 +122,8 @@ public class OAuthService {
                 log.info("[" + name + "]이 회원가입 되었습니다.");
             }
             session.setAttribute("user", member);
+            log.info("세션 ID: " + session.getId());
+            log.info("member ID: " + member.getId());
             return member; // 로그인 또는 새로 생성한 사용자 반환
         }
         throw new RuntimeException("사용자 정보를 가져오는 데 실패했습니다.");

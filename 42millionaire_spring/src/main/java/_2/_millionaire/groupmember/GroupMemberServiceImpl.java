@@ -4,7 +4,6 @@ import _2._millionaire.group.GroupRepository;
 import _2._millionaire.group.Groups;
 import _2._millionaire.groupjoin.GroupJoin;
 import _2._millionaire.groupjoin.GroupJoinRepository;
-import _2._millionaire.groupjoin.GroupJoinServiceImpl;
 import _2._millionaire.groupmember.dto.*;
 import _2._millionaire.group.exception.GroupCustomException;
 import _2._millionaire.group.exception.GroupErrorCode;
@@ -15,8 +14,6 @@ import _2._millionaire.member.MemberRepository;
 import _2._millionaire.task.Task;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.Group;
-import org.hibernate.metamodel.model.domain.internal.MapMember;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +32,6 @@ public class GroupMemberServiceImpl implements  GroupMemberSerivce{
     private final MemberRepository memberRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final GroupJoinRepository groupJoinRepository;
-    private final GroupJoinServiceImpl groupJoinService;
 
     public SearchGroupMemberListResponse searchAllGroupMembers(Long groupId) {
         // groupId로 그룹을 찾고 없으면 예외를 던짐

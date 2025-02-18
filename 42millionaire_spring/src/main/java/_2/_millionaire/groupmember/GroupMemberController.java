@@ -4,6 +4,7 @@ import _2._millionaire.groupmember.dto.*;
 import _2._millionaire.member.Member;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/groupmember")
 @RequiredArgsConstructor
 @SessionAttributes("user")
+@Slf4j
 public class GroupMemberController {
     private final GroupMemberServiceImpl groupMemberService;
 
@@ -22,6 +24,9 @@ public class GroupMemberController {
 
     @GetMapping("/check/{groupId}")
     public ResponseEntity<Boolean> checkGroupMember(@PathVariable("groupId") Long groupId, HttpSession session) {
+        log.info("세션 ID: " + session.getId());
+        Member member = (Member) session.getAttribute("user");
+        log.info("member ID: " + member.getId());
         return ResponseEntity.ok(groupMemberService.checkGroupMember(groupId, session));
     }
 
