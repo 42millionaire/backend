@@ -45,7 +45,7 @@ public class OAuthService {
     private String LOGIN_REDIRECT_URL;
 
     private final MemberRepository memberRepository;
-    public LoginMemberResponse signInOrSignUp(String accessCode, HttpServletRequest sr) {
+    public LoginMemberResponse signInOrSignUp(String accessCode, HttpServletRequest sr, HttpServletResponse res) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -70,6 +70,7 @@ public class OAuthService {
             session.setAttribute("user", member);
             log.info("세션 ID: " + session.getId());
             log.info("member ID: " + member.getId());
+
             return LoginMemberResponse.builder()
                     .memberId(member.getId())
                     .memberName(member.getName())
