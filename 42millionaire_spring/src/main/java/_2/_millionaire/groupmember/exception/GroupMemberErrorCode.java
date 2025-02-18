@@ -20,6 +20,6 @@ public enum GroupMemberErrorCode implements BaseErrorCode {
 
     @Override
     public int getStatusCode() {
-        return 0;
+        return statusCode;
     }
 }
