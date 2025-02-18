@@ -18,7 +18,7 @@ public enum GroupErrorCode implements BaseErrorCode {
 
     @Override
     public String getMessage() {
-        return null;
+        return message;
     }
 
     @Override
