@@ -25,13 +25,8 @@ public class GroupMemberController {
 
     @GetMapping("/check/{groupId}")
     public ResponseEntity<Boolean> checkGroupMember(@PathVariable("groupId") Long groupId, HttpSession session) {
-        log.info("세션 ID: " + session.getId());
-        log.info("세션 ID: " + session.getId());
-        log.info("세션 ID: " + session.getId());
         Member member = (Member) session.getAttribute("user");
         if (member != null) {
-            log.info("세션 ID: " + session.getId());
-            log.info("member ID: " + member.getId());
             return ResponseEntity.ok(groupMemberService.checkGroupMember(groupId, session));
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

@@ -68,17 +68,9 @@ public class OAuthService {
             HttpSession session = sr.getSession();
             session.setMaxInactiveInterval(30 * 60);
             session.setAttribute("user", member);
-            log.info("세션 ID: " + session.getId());
-            log.info("member ID: " + member.getId());
-            log.info(session.getId());
-            log.info(session.getId());
-            log.info(session.getId());
-            log.info(session.getId() + "---------------------------------------");
-
             return LoginMemberResponse.builder()
                     .memberId(member.getId())
                     .memberName(member.getName())
-                    .sessionId(session.getId())
                     .build();
         }
         return null;
