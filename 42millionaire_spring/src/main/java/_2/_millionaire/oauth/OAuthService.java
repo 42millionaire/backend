@@ -68,7 +68,6 @@ public class OAuthService {
             HttpSession session = sr.getSession();
             session.setMaxInactiveInterval(30 * 60);
             session.setAttribute("user", member);
-            res.addHeader("Set-Cookie", "JSESSION="+ session.getId() + "; HttpOnly; Path=/; Secure; SameSite=None");
             log.info("세션 ID: " + session.getId());
             log.info("member ID: " + member.getId());
 
