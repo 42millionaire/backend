@@ -2,6 +2,7 @@ package _2._millionaire.groupmember;
 
 import _2._millionaire.groupmember.dto.*;
 import _2._millionaire.member.Member;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +24,15 @@ public class GroupMemberController {
     }
 
     @GetMapping("/check/{groupId}")
-    public ResponseEntity<Boolean> checkGroupMember(@PathVariable("groupId") Long groupId, HttpSession session) {
-        log.info("세션 ID: " + session.getId());
-        Member member = (Member) session.getAttribute("user");
-        log.info("member ID: " + member.getId());
-        return ResponseEntity.ok(groupMemberService.checkGroupMember(groupId, session));
+    public ResponseEntity<Boolean> checkGroupMember(@PathVariable("groupId") Long groupId, HttpServletRequest req) {
+        HttpSession session = req.getSession(true);
+        if (session != null) {
+            log.info("세션 ID: " + session.getId());
+            Member member = (Member) session.getAttribute("user");
+            log.info("member ID: " + member.getId());
+            return ResponseEntity.ok(groupMemberService.checkGroupMember(groupId, session));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @PostMapping("")
