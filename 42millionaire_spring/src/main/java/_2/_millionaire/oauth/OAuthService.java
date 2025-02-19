@@ -5,6 +5,7 @@ import _2._millionaire.member.MemberRepository;
 import _2._millionaire.oauth.dto.LoginMemberResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -65,12 +66,17 @@ public class OAuthService {
         if (responseEntity.getStatusCode() == HttpStatus.OK){
             String accessToken = extractAccessToken(responseEntity.getBody());
             Member member = getOrCreateMember(accessToken);
-            HttpSession session = sr.getSession();
-            session.setMaxInactiveInterval(30 * 60);
-            session.setAttribute("user", member);
-            log.info("세션 ID: " + session.getId());
-            log.info("member ID: " + member.getId());
+//            HttpSession session = sr.getSession();
+//            session.setMaxInactiveInterval(30 * 60);
+//            session.setAttribute("user", member);
+//            log.info("세션 ID: " + session.getId());
+//            log.info("member ID: " + member.getId());
 
+            Cookie accessTokenCookie = new Cookie("accessToken", "As");
+            accessTokenCookie.setHttpOnly(true);
+            accessTokenCookie.setSecure(true);  // HTTPS에서만 전송
+            accessTokenCookie.setPath("/");     // 쿠키가 유효한 경로 설정
+            res.addCookie(accessTokenCookie);
             return LoginMemberResponse.builder()
                     .memberId(member.getId())
                     .memberName(member.getName())
