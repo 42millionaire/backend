@@ -45,7 +45,8 @@ public class OAuthService {
     private String LOGIN_REDIRECT_URL;
 
     private final MemberRepository memberRepository;
-    public LoginMemberResponse signInOrSignUp(String accessCode, HttpServletRequest sr, HttpServletResponse res) {
+
+    public LoginMemberResponse signInOrSignUp(String accessCode, HttpServletRequest req) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -62,12 +63,16 @@ public class OAuthService {
 
         ResponseEntity<String> responseEntity = restTemplate.postForEntity(GOOGLE_TOKEN_URL, request, String.class);
 
-        if (responseEntity.getStatusCode() == HttpStatus.OK){
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            HttpSession session = req.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
             String accessToken = extractAccessToken(responseEntity.getBody());
             Member member = getOrCreateMember(accessToken);
-            HttpSession session = sr.getSession();
-            session.setMaxInactiveInterval(30 * 60);
-            session.setAttribute("user", member);
+            HttpSession newSession = req.getSession();
+            newSession.setMaxInactiveInterval(30 * 60);
+            newSession.setAttribute("user", member);
             return LoginMemberResponse.builder()
                     .memberId(member.getId())
                     .memberName(member.getName())
@@ -78,14 +83,10 @@ public class OAuthService {
 
     private String extractAccessToken(String body) {
         try {
-            // ObjectMapper를 사용하여 responseBody를 JSON 파싱
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode root = objectMapper.readTree(body);
-
-            // "access_token" 키의 값을 추출
             return root.path("access_token").asText();
         } catch (Exception e) {
-            // 파싱 오류 처리
             throw new RuntimeException("엑세스 토큰을 추출하는 데 실패했습니다.", e);
         }
     }

@@ -32,8 +32,8 @@ public class OauthController {
     }
 
     @GetMapping("/login/oauth2/code/google")
-    public ResponseEntity<LoginMemberResponse> successGoogleLogin(@RequestParam("code") String accessCode, HttpServletRequest servletRequest, HttpServletResponse res){
-        return ResponseEntity.status(HttpStatus.OK).body(oAuthService.signInOrSignUp(accessCode, servletRequest, res));
+    public ResponseEntity<LoginMemberResponse> successGoogleLogin(@RequestParam("code") String accessCode, HttpServletRequest servletRequest){
+        return ResponseEntity.status(HttpStatus.OK).body(oAuthService.signInOrSignUp(accessCode, servletRequest));
     }
 }
 
