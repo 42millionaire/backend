@@ -22,7 +22,7 @@ public class OauthController {
 
     private final OAuthService oAuthService;
 
-    @GetMapping("/oauth/google")
+    @GetMapping("/api/oauth/google")
     public ResponseEntity<RedirectResponse> googleLogin(HttpServletResponse response) throws IOException {
         String redirectUrl = oAuthService.redirect();
         log.info(redirectUrl);
@@ -31,7 +31,7 @@ public class OauthController {
         return ResponseEntity.status(HttpStatus.OK).body(RedirectResponse.builder().url(redirectUrl).build());
     }
 
-    @GetMapping("/login/oauth2/code/google")
+    @GetMapping("/api/login/oauth2/code/google")
     public ResponseEntity<LoginMemberResponse> successGoogleLogin(@RequestParam("code") String accessCode, HttpServletRequest servletRequest){
         return ResponseEntity.status(HttpStatus.OK).body(oAuthService.signInOrSignUp(accessCode, servletRequest));
     }

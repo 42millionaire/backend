@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/groupmember")
+@RequestMapping("/api/groupmember")
 @RequiredArgsConstructor
 @SessionAttributes("user")
 @Slf4j

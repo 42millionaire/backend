@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/appeal")
+@RequestMapping("/api/appeal")
 public class AppealController {
     private final AppealServiceImpl appealService;
 
