@@ -23,7 +23,7 @@ public class WebConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://127.0.0.1:5173", "https://42millionaire.netlify.app")
+                        .allowedOrigins("http://localhost:5173", "http://127.0.0.1:5173", "https://42millionaire.netlify.app")
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .exposedHeaders("*")
