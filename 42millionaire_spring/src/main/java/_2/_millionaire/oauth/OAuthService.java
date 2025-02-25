@@ -91,7 +91,18 @@ public class OAuthService {
         }
     }
 
-    public String redirect() {
+    public String redirect(String redirectUrl) {
+        if (redirectUrl.equals("http://localhost:5173/auth/google/callback")) {
+            URI uri = UriComponentsBuilder.fromHttpUrl(GOOGLE_AUTH_URL)
+                    .queryParam("client_id", GOOGLE_CLIENT_ID)
+                    .queryParam("redirect_uri", redirectUrl)
+                    .queryParam("response_type", "code")
+                    .queryParam("scope", "profile email")  // 자동으로 인코딩됨
+                    .queryParam("flowName", "GeneralOAuthFlow")
+                    .build()
+                    .toUri();
+
+        }
         // UriComponentsBuilder를 사용하여 URL 생성 및 인코딩
         URI uri = UriComponentsBuilder.fromHttpUrl(GOOGLE_AUTH_URL)
                 .queryParam("client_id", GOOGLE_CLIENT_ID)
