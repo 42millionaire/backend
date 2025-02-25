@@ -101,6 +101,7 @@ public class OAuthService {
                     .queryParam("flowName", "GeneralOAuthFlow")
                     .build()
                     .toUri();
+            return uri.toString();
 
         }
         // UriComponentsBuilder를 사용하여 URL 생성 및 인코딩
