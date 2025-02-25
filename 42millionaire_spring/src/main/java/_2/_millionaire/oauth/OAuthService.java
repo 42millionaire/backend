@@ -20,6 +20,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ public class OAuthService {
 
     private final MemberRepository memberRepository;
 
-    public LoginMemberResponse signInOrSignUp(String accessCode, HttpServletRequest req) {
+    public LoginMemberResponse signInOrSignUp(String accessCode, HttpServletRequest req, HttpServletResponse resp) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -74,14 +75,43 @@ public class OAuthService {
             String accessToken = extractAccessToken(responseEntity.getBody());
             Member member = getOrCreateMember(accessToken);
             HttpSession newSession = req.getSession();
+
             newSession.setMaxInactiveInterval(30 * 60);
             newSession.setAttribute("user", member);
+
+
+            String referer = req.getHeader("Referer");
+            String cookieDomain = getCookieDomain(referer);
+
+            Cookie sessionCookie = new Cookie("JSESSIONID", newSession.getId());
+            sessionCookie.setHttpOnly(true);
+//            sessionCookie.setSecure(!cookieDomain.equals("localhost")); // 로컬이 아니면 Secure 쿠키 설정
+            sessionCookie.setPath("/");
+            sessionCookie.setDomain(cookieDomain); // 도메인 설정
+            resp.addCookie(sessionCookie);
             return LoginMemberResponse.builder()
                     .memberId(member.getId())
                     .memberName(member.getName())
                     .build();
         }
         return null;
+    }
+
+    private String getCookieDomain(String referer) {
+        if (referer == null) {
+            return "42millionaire.phan.kr"; // 기본값 (배포 환경)
+        }
+
+        try {
+            URI uri = new URI(referer);
+            String host = uri.getHost();
+            if (host.contains("localhost")) {
+                return "localhost"; // 로컬 환경
+            }
+            return "42millionaire.phan.kr"; // 배포 환경
+        } catch (URISyntaxException e) {
+            return "42millionaire.phan.kr"; // 예외 발생 시 기본 도메인 사용
+        }
     }
 
     private String extractAccessToken(String body) {
