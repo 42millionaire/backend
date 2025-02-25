@@ -45,7 +45,6 @@ public class OAuthService {
     private String LOGIN_REDIRECT_URL;
 
     private final MemberRepository memberRepository;
-    private String googleClientId;
 
     public LoginMemberResponse signInOrSignUp(String accessCode, HttpServletRequest req) {
         RestTemplate restTemplate = new RestTemplate();
@@ -98,7 +97,7 @@ public class OAuthService {
     public String redirect(String redirectUrl) {
         if (redirectUrl.equals("http://localhost:5173/auth/google/callback")) {
             URI uri = UriComponentsBuilder.fromHttpUrl(GOOGLE_AUTH_URL)
-                    .queryParam("client_id", googleClientId)
+                    .queryParam("client_id", GOOGLE_CLIENT_ID)
                     .queryParam("redirect_uri", redirectUrl)
                     .queryParam("response_type", "code")
                     .queryParam("scope", "profile email")  // 자동으로 인코딩됨
