@@ -23,7 +23,7 @@ public class Verification extends BaseEntity {
     @JoinColumn(name = "task_id", referencedColumnName = "id")
     private Task task;
 
-    @OneToMany(mappedBy = "verification")
+    @OneToMany(mappedBy = "verification", cascade = CascadeType.ALL)
     private List<VerificationImage> verificationImages;
 
 }
