@@ -83,6 +83,7 @@ public class OAuthService {
             String referer = req.getHeader("Referer");
             String cookieDomain = getCookieDomain(referer);
 
+            log.info("domain : "+ cookieDomain);
             Cookie sessionCookie = new Cookie("JSESSIONID", newSession.getId());
             sessionCookie.setHttpOnly(true);
 //            sessionCookie.setSecure(!cookieDomain.equals("localhost")); // 로컬이 아니면 Secure 쿠키 설정
@@ -98,6 +99,7 @@ public class OAuthService {
     }
 
     private String getCookieDomain(String referer) {
+        log.info("referer" + referer);
         if (referer == null) {
             return "42millionaire.phan.kr"; // 기본값 (배포 환경)
         }
