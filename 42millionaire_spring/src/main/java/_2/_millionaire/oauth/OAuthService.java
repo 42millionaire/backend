@@ -102,16 +102,10 @@ public class OAuthService {
             return "42millionaire.phan.kr"; // 기본값 (배포 환경)
         }
 
-        try {
-            URI uri = new URI(referer);
-            String host = uri.getHost();
-            if (host.contains("localhost")) {
-                return "localhost"; // 로컬 환경
-            }
+        if (referer.contains("localhost")) {
+            return "localhost"; // 로컬 환경
+        } else
             return "42millionaire.phan.kr"; // 배포 환경
-        } catch (URISyntaxException e) {
-            return "42millionaire.phan.kr"; // 예외 발생 시 기본 도메인 사용
-        }
     }
 
     private String extractAccessToken(String body) {
