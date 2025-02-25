@@ -32,10 +32,10 @@ public class OauthController {
     //임시 auth login API
     @GetMapping("/api/oauth/google")
     public ResponseEntity<RedirectResponse> googleLogin(HttpServletRequest request) {
-        String clientHost = request.getHeader("Host"); // 클라이언트가 접속한 도메인
+        String clientHost = request.getHeader("Referer"); // 클라이언트가 접속한 도메인
         String clientIp = request.getRemoteAddr(); // 클라이언트의 IP 주소
 
-        log.info("Client Host: {}", clientHost);
+        log.info("Client Referer: {}", clientHost);
         log.info("Client IP: {}", clientIp);
 
         boolean isLocal = isLocalRequest(clientHost, clientIp);
