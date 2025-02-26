@@ -108,6 +108,9 @@ public class OAuthService {
                 if ("JSESSIONID".equals(cookie.getName())) {
                     cookie.setMaxAge(0); // 쿠키 삭제
                     cookie.setPath("/");
+                    if (req.getHeader("Referer") != null && req.getHeader("Referer").contains("localhost")) {
+                        cookie.setDomain("localhost");
+                    }
                     resp.addCookie(cookie);
                 }
             }
