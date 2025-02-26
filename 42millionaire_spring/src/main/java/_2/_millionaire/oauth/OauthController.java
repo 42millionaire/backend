@@ -35,9 +35,6 @@ public class OauthController {
         String clientHost = request.getHeader("Referer"); // 클라이언트가 접속한 도메인
         String clientIp = request.getRemoteAddr(); // 클라이언트의 IP 주소
 
-        log.info("Client Referer: {}", clientHost);
-        log.info("Client IP: {}", clientIp);
-
         boolean isLocal = isLocalRequest(clientHost, clientIp);
 
         // 로컬 환경이면 localhost 리다이렉트, 배포 환경이면 도메인 리다이렉트
@@ -54,8 +51,8 @@ public class OauthController {
     }
 
     @GetMapping("/api/login/oauth2/code/google")
-    public ResponseEntity<LoginMemberResponse> successGoogleLogin(@RequestParam("code") String accessCode, HttpServletRequest servletRequest, HttpServletResponse res){
-        return ResponseEntity.status(HttpStatus.OK).body(oAuthService.signInOrSignUp(accessCode, servletRequest, res));
+    public ResponseEntity<LoginMemberResponse> successGoogleLogin(@RequestParam("code") String accessCode, HttpServletRequest servletRequest){
+        return ResponseEntity.status(HttpStatus.OK).body(oAuthService.signInOrSignUp(accessCode, servletRequest));
     }
 }
 
