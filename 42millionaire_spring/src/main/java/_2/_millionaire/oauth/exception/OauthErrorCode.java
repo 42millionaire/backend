@@ -4,7 +4,7 @@ import _2._millionaire.BaseErrorCode;
 
 public enum OauthErrorCode implements BaseErrorCode {
 
-    GOOGLE_OAUTH_400_ERROR("Google OAuth exception", 404);
+    GOOGLE_OAUTH_400_ERROR("Google OAuth exception", 400);
 
     private final String message;
     private final int statusCode;
