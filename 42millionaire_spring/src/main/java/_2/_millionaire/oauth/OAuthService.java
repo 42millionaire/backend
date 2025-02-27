@@ -1,5 +1,6 @@
 package _2._millionaire.oauth;
 
+import _2._millionaire.CustomResponseErrorHandler;
 import _2._millionaire.member.Member;
 import _2._millionaire.member.MemberRepository;
 import _2._millionaire.oauth.dto.LoginMemberResponse;
@@ -51,6 +52,7 @@ public class OAuthService {
 
     public LoginMemberResponse signInOrSignUp(String accessCode, HttpServletRequest req) {
         RestTemplate restTemplate = new RestTemplate();
+        restTemplate.setErrorHandler(new CustomResponseErrorHandler());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
