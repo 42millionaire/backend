@@ -16,11 +16,11 @@ public enum OauthErrorCode implements BaseErrorCode {
 
     @Override
     public String getMessage() {
-        return null;
+        return message;
     }
 
     @Override
     public int getStatusCode() {
-        return 0;
+        return statusCode;
     }
 }
