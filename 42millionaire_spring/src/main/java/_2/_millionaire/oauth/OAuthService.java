@@ -3,6 +3,8 @@ package _2._millionaire.oauth;
 import _2._millionaire.member.Member;
 import _2._millionaire.member.MemberRepository;
 import _2._millionaire.oauth.dto.LoginMemberResponse;
+import _2._millionaire.oauth.exception.OauthCustomException;
+import _2._millionaire.oauth.exception.OauthErrorCode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
@@ -85,7 +87,9 @@ public class OAuthService {
                     .memberName(member.getName())
                     .build();
         }
-        return null;
+        else {
+            throw new OauthCustomException(OauthErrorCode.GOOGLE_OAUTH_400_ERROR);
+        }
     }
 
     private String extractAccessToken(String body) {
