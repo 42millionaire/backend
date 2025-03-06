@@ -81,7 +81,7 @@ public class OAuthService {
             Member member = getOrCreateMember(accessToken);
             HttpSession newSession = req.getSession();
 
-            newSession.setMaxInactiveInterval(30 * 60);
+            newSession.setMaxInactiveInterval(30 * 24 * 60 * 60);
             newSession.setAttribute("user", member);
 
             return LoginMemberResponse.builder()
